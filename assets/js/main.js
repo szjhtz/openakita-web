@@ -1228,8 +1228,8 @@
     var osDownload = pickDownloadForOS(data.downloads, os);
     if (primaryBtn && osDownload) {
       primaryBtn.href = osDownload.url;
+      var sizeStr = formatSize(osDownload.size);
       if (primaryOS) {
-        var sizeStr = formatSize(osDownload.size);
         primaryOS.textContent = "\u4e0b\u8f7d OpenAkita v" + data.version;
       }
       if (primaryMeta) {
