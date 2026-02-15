@@ -54,41 +54,46 @@
 </section>
 <section>
 <div class="container card-grid">
-<article class="card reveal">
+<article class="card reveal" style="grid-column: 1 / -1;">
 <img alt="desktop" class="card-icon" src="../assets/img/icons/download.svg"/>
-<h3 data-i18n="download.0004">Desktop 安装包（Win / macOS / Linux）</h3>
-<p data-i18n="download.0005">只保留三端最新安装包入口，按你的系统直接下载即可。</p>
-<div class="meta" data-i18n="download.0006">版本：<span id="latestReleaseVersion">加载中...</span> · <span id="latestReleaseDate">--</span></div>
-<!-- 一键下载按钮（自动检测 OS 后显示） -->
-<div class="primary-download" id="primaryDownload" style="display:none; margin: 12px 0;">
-  <a class="btn btn-primary btn-lg" id="primaryDownloadBtn" href="#" style="font-size:15px; padding:12px 28px; display:inline-flex; align-items:center; gap:8px; flex-direction:column;">
-    <span>⬇</span>
-    <span>下载 OpenAkita</span>
-    <span class="download-meta" id="primaryDownloadMeta" style="font-size:11px; opacity:0.8;"></span>
-  </a>
-  <p style="margin-top:6px; font-size:12px; color:var(--text-muted);">其他平台请在下方选择</p>
+<h3>Desktop 安装包（Win / macOS / Linux）</h3>
+<p>自动检测你的操作系统，点击即可下载安装。</p>
+
+<!-- ── 最新版（main 分支） ── -->
+<div id="devDownloadSection" class="download-channel" style="margin-top:20px;">
+  <div class="channel-header">
+    <span class="channel-badge channel-dev">最新版</span>
+    <span class="channel-version" id="devVersion">加载中...</span>
+    <span class="channel-date" id="devDate"></span>
+  </div>
+  <div class="channel-buttons" id="devButtons">
+    <a class="download-btn download-btn-primary" id="devPrimaryBtn" href="#">
+      <span class="download-btn-os" id="devPrimaryOS">检测系统中...</span>
+      <span class="download-btn-meta" id="devPrimaryMeta"></span>
+    </a>
+  </div>
+  <div class="channel-platforms" id="devPlatforms"></div>
 </div>
-<div class="actions">
-<a class="btn btn-primary" href="https://github.com/openakita/openakita/releases" id="downloadDesktopButton" rel="noreferrer noopener" target="_blank">查看全部安装包</a>
-<a class="btn btn-secondary" href="https://github.com/openakita/openakita/releases" id="latestReleaseNotesLink" rel="noreferrer noopener" target="_blank">Release 说明</a>
+
+<!-- ── 稳定版（v*.x 分支） ── -->
+<div id="stableDownloadSection" class="download-channel" style="margin-top:20px; display:none;">
+  <div class="channel-header">
+    <span class="channel-badge channel-stable">稳定版</span>
+    <span class="channel-version" id="stableVersion"></span>
+    <span class="channel-date" id="stableDate"></span>
+  </div>
+  <div class="channel-buttons" id="stableButtons">
+    <a class="download-btn download-btn-stable" id="stablePrimaryBtn" href="#">
+      <span class="download-btn-os" id="stablePrimaryOS"></span>
+      <span class="download-btn-meta" id="stablePrimaryMeta"></span>
+    </a>
+  </div>
+  <div class="channel-platforms" id="stablePlatforms"></div>
 </div>
-<div class="platform-grid">
-<a class="platform-link" href="https://github.com/openakita/openakita/releases" id="downloadWindowsBtn" rel="noreferrer noopener" target="_blank">
-<span class="platform-icon"><img alt="Windows" src="../assets/img/icons/windows.svg"/></span>
-<span class="platform-meta"><strong data-i18n="download.0007">Windows</strong><span id="windowsAssetName">加载中...</span></span>
-</a>
-<a class="platform-link" href="https://github.com/openakita/openakita/releases" id="downloadMacBtn" rel="noreferrer noopener" target="_blank">
-<span class="platform-icon"><img alt="macOS" src="../assets/img/icons/macos.svg"/></span>
-<span class="platform-meta"><strong data-i18n="download.0008">macOS</strong><span id="macAssetName">加载中...</span></span>
-</a>
-<a class="platform-link" href="https://github.com/openakita/openakita/releases" id="downloadLinuxBtn" rel="noreferrer noopener" target="_blank">
-<span class="platform-icon"><img alt="Linux" src="../assets/img/icons/linux.svg"/></span>
-<span class="platform-meta"><strong data-i18n="download.0009">Linux</strong><span id="linuxAssetName">加载中...</span></span>
-</a>
+
+<div class="actions" style="margin-top:16px;">
+  <a class="btn btn-secondary" href="https://github.com/openakita/openakita/releases" rel="noreferrer noopener" target="_blank">全部版本</a>
 </div>
-<p data-i18n="download.0010" style="margin-top: 10px; color: var(--text-muted); font-size: 13px;">若当前版本缺少某端包，按钮会自动跳转到 Releases 页。</p>
-<!-- 更新日志摘要（JS 动态填充） -->
-<div id="releaseNotesSummary" style="display:none; margin-top:16px; padding:12px 16px; background:var(--bg-alt, #f8f9fa); border-radius:8px; border:1px solid var(--border, #e0e0e0);"></div>
 </article>
 <article class="card reveal">
 <img alt="cli" class="card-icon" src="../assets/img/icons/book.svg"/>

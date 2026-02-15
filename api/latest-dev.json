@@ -2,5 +2,32 @@
   "version": "1.22.0",
   "notes": "**Full Changelog**: https://github.com/openakita/openakita/compare/v1.21.9...v1.22.0",
   "pub_date": "2026-02-15T20:11:00Z",
-  "platforms": {}
+  "platforms": {},
+  "downloads": {
+    "windows": {
+      "name": "OpenAkita.Desktop_1.22.0_x64-setup-core.exe",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.22.0/OpenAkita.Desktop_1.22.0_x64-setup-core.exe",
+      "size": 61150287
+    },
+    "windows-full": {
+      "name": "OpenAkita.Desktop_1.22.0_x64-setup-full.exe",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.22.0/OpenAkita.Desktop_1.22.0_x64-setup-full.exe",
+      "size": 285526614
+    },
+    "macos": {
+      "name": "OpenAkita.Desktop_1.22.0_aarch64.dmg",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.22.0/OpenAkita.Desktop_1.22.0_aarch64.dmg",
+      "size": 82754994
+    },
+    "linux-appimage": {
+      "name": "OpenAkita.Desktop_1.22.0_amd64.AppImage",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.22.0/OpenAkita.Desktop_1.22.0_amd64.AppImage",
+      "size": 172149240
+    },
+    "linux-deb": {
+      "name": "OpenAkita.Desktop_1.22.0_amd64.deb",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.22.0/OpenAkita.Desktop_1.22.0_amd64.deb",
+      "size": 102142670
+    }
+  }
 }

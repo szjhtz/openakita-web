@@ -1141,219 +1141,205 @@
     return null;
   }
 
-  function highlightRecommendedPlatform() {
-    var os = detectOS();
-    var map = { windows: "downloadWindowsBtn", macos: "downloadMacBtn", linux: "downloadLinuxBtn" };
-    if (!os || !map[os]) return;
-    var btn = document.getElementById(map[os]);
-    if (btn) {
-      btn.classList.add("recommended");
-    }
+  // ── Download channel helpers ──
+  var OS_LABELS = { windows: "Windows", macos: "macOS", linux: "Linux" };
+
+  function formatSize(bytes) {
+    if (!bytes || bytes <= 0) return "";
+    return (bytes / 1024 / 1024).toFixed(1) + " MB";
   }
 
-  function showPrimaryDownloadButton(os, asset, version) {
-    var container = document.getElementById("primaryDownload");
-    if (!container || !os || !asset) return;
-
-    var btn = document.getElementById("primaryDownloadBtn");
-    var meta = document.getElementById("primaryDownloadMeta");
-    if (!btn) return;
-
-    var osLabels = { windows: "Windows", macos: "macOS", linux: "Linux" };
-    var sizeMb = asset.size ? (asset.size / 1024 / 1024).toFixed(1) + " MB" : "";
-
-    btn.href = asset.browser_download_url || asset.url || "#";
-    btn.querySelector("span:nth-child(2)").textContent = "\u4e0b\u8f7d OpenAkita " + (version || "");
-    if (meta) {
-      meta.textContent = (osLabels[os] || os) + (sizeMb ? " \u00b7 " + sizeMb : "");
-    }
-    container.style.display = "";
-  }
-
-  function formatAssetSize(asset) {
-    return asset && asset.size ? (asset.size / 1024 / 1024).toFixed(1) + " MB" : "--";
-  }
-
-  function pickReleaseAsset(assets, patterns) {
-    if (!Array.isArray(assets)) return null;
-    for (const pattern of patterns) {
-      const found = assets.find(function (asset) {
-        const name = (asset && asset.name ? asset.name : "").toLowerCase();
-        return pattern.test(name);
-      });
-      if (found) return found;
-    }
+  function pickDownloadForOS(downloads, os) {
+    if (!downloads || !os) return null;
+    if (os === "windows") return downloads["windows"] || null;
+    if (os === "macos") return downloads["macos"] || null;
+    if (os === "linux") return downloads["linux-appimage"] || downloads["linux-deb"] || null;
     return null;
   }
 
-  function applyPlatformAsset(platform, asset, fallbackUrl) {
-    const btn = document.getElementById(platform.buttonId);
-    const nameNode = document.getElementById(platform.nameId);
-    if (!btn || !nameNode) return;
+  function getAllPlatformLinks(downloads, os) {
+    if (!downloads) return [];
+    var links = [];
+    var order = [
+      { key: "windows", label: "Windows (.exe)" },
+      { key: "windows-full", label: "Windows \u5b8c\u6574\u7248 (.exe)" },
+      { key: "macos", label: "macOS (.dmg)" },
+      { key: "linux-appimage", label: "Linux (.AppImage)" },
+      { key: "linux-deb", label: "Linux (.deb)" },
+    ];
+    order.forEach(function(p) {
+      if (downloads[p.key]) {
+        var size = formatSize(downloads[p.key].size);
+        links.push({
+          label: p.label + (size ? " " + size : ""),
+          url: downloads[p.key].url,
+          isCurrent: (os === "windows" && (p.key === "windows")) ||
+                     (os === "macos" && p.key === "macos") ||
+                     (os === "linux" && p.key === "linux-appimage"),
+        });
+      }
+    });
+    return links;
+  }
 
-    if (asset) {
-      btn.href = asset.browser_download_url;
-      nameNode.textContent = asset.name + " (" + formatAssetSize(asset) + ")";
-    } else {
-      btn.href = fallbackUrl;
-      nameNode.textContent = t("common.release.platformMissing");
+  function buildDownloadURLsFromGH(version, assets) {
+    var downloads = {};
+    if (!Array.isArray(assets)) return downloads;
+    var patterns = {
+      "windows": [/setup-core\.exe$/i, /\.exe$/i],
+      "windows-full": [/setup-full\.exe$/i],
+      "macos": [/\.dmg$/i],
+      "linux-appimage": [/\.appimage$/i],
+      "linux-deb": [/\.deb$/i],
+    };
+    Object.keys(patterns).forEach(function(key) {
+      patterns[key].some(function(re) {
+        var found = assets.find(function(a) { return re.test(a.name || ""); });
+        if (found) {
+          downloads[key] = {
+            name: found.name,
+            url: found.browser_download_url,
+            size: found.size || 0,
+          };
+          return true;
+        }
+        return false;
+      });
+    });
+    return downloads;
+  }
+
+  function renderChannel(prefix, data, os) {
+    var section = document.getElementById(prefix + "DownloadSection");
+    if (!section) return;
+    if (!data || !data.version) { section.style.display = "none"; return; }
+
+    section.style.display = "";
+    var versionEl = document.getElementById(prefix + "Version");
+    var dateEl = document.getElementById(prefix + "Date");
+    var primaryBtn = document.getElementById(prefix + "PrimaryBtn");
+    var primaryOS = document.getElementById(prefix + "PrimaryOS");
+    var primaryMeta = document.getElementById(prefix + "PrimaryMeta");
+    var platformsEl = document.getElementById(prefix + "Platforms");
+
+    if (versionEl) versionEl.textContent = "v" + data.version;
+    if (dateEl) dateEl.textContent = data.pub_date ? formatDate(data.pub_date) : "";
+
+    var osDownload = pickDownloadForOS(data.downloads, os);
+    if (primaryBtn && osDownload) {
+      primaryBtn.href = osDownload.url;
+      if (primaryOS) {
+        var sizeStr = formatSize(osDownload.size);
+        primaryOS.textContent = "\u4e0b\u8f7d OpenAkita v" + data.version;
+      }
+      if (primaryMeta) {
+        primaryMeta.textContent = (OS_LABELS[os] || "") + (sizeStr ? " \u00b7 " + sizeStr : "");
+      }
+    } else if (primaryBtn) {
+      primaryBtn.href = "https://github.com/openakita/openakita/releases/tag/v" + data.version;
+      if (primaryOS) primaryOS.textContent = "\u524d\u5f80 GitHub \u4e0b\u8f7d v" + data.version;
+      if (primaryMeta) primaryMeta.textContent = "";
     }
+
+    if (platformsEl) {
+      platformsEl.innerHTML = "";
+      var links = getAllPlatformLinks(data.downloads, os);
+      links.forEach(function(link) {
+        if (link.isCurrent) return;
+        var a = document.createElement("a");
+        a.href = link.url;
+        a.textContent = link.label;
+        platformsEl.appendChild(a);
+      });
+    }
+  }
+
+  async function fetchManifest(url) {
+    try {
+      var res = await fetch(url, { signal: AbortSignal.timeout(5000) });
+      if (res.ok) return await res.json();
+    } catch (e) { /* ignore */ }
+    return null;
+  }
+
+  async function fetchGHRelease(prerelease) {
+    try {
+      var url = prerelease
+        ? "https://api.github.com/repos/openakita/openakita/releases"
+        : "https://api.github.com/repos/openakita/openakita/releases/latest";
+      var res = await fetch(url, { headers: { Accept: "application/vnd.github+json" }, signal: AbortSignal.timeout(8000) });
+      if (!res.ok) return null;
+      var data = await res.json();
+      if (prerelease) {
+        return Array.isArray(data) ? data[0] : null;
+      }
+      return data;
+    } catch (e) { return null; }
   }
 
   async function loadLatestRelease() {
-    const versionNode = document.getElementById("latestReleaseVersion");
-    const dateNode = document.getElementById("latestReleaseDate");
-    const notesNode = document.getElementById("latestReleaseNotesLink");
-    const assetsNode = document.getElementById("releaseAssetsList");
-    const desktopBtn = document.getElementById("downloadDesktopButton");
-
-    if (!versionNode && !assetsNode && !desktopBtn) {
+    if (!document.getElementById("devDownloadSection") &&
+        !document.getElementById("stableDownloadSection") &&
+        !document.getElementById("latestReleaseVersion")) {
       return;
     }
 
-    const fallbackUrl = "https://github.com/openakita/openakita/releases";
+    var os = detectOS();
 
-    try {
-      if (versionNode && !versionNode.textContent.trim()) {
-        versionNode.textContent = t("common.release.loading");
-      }
+    // Fetch both manifests in parallel
+    var results = await Promise.allSettled([
+      fetchManifest("/api/latest-dev.json"),
+      fetchManifest("/api/latest.json"),
+    ]);
 
-      // ── 优先从 latest.json 加载（更快、无速率限制） ──
-      let release = null;
-      let assets = [];
-      let version = "latest";
-      let published = "--";
-      let htmlUrl = fallbackUrl;
+    var devManifest = results[0].status === "fulfilled" ? results[0].value : null;
+    var stableManifest = results[1].status === "fulfilled" ? results[1].value : null;
 
-      try {
-        const latestRes = await fetch("/api/latest.json", { signal: AbortSignal.timeout(3000) });
-        if (latestRes.ok) {
-          const latestData = await latestRes.json();
-          version = latestData.version ? "v" + latestData.version : "latest";
-          published = latestData.pub_date ? formatDate(latestData.pub_date) : "--";
-          htmlUrl = "https://github.com/openakita/openakita/releases/tag/v" + latestData.version;
-          // Convert latest.json platforms to asset-like objects
-          if (latestData.platforms) {
-            Object.keys(latestData.platforms).forEach(function(key) {
-              var p = latestData.platforms[key];
-              if (p && p.url) {
-                var name = p.url.split("/").pop() || key;
-                assets.push({
-                  name: name,
-                  browser_download_url: p.url,
-                  size: 0, // size not available in latest.json
-                });
-              }
-            });
-          }
-          if (latestData.notes) {
-            showReleaseNotes(latestData.notes, version, htmlUrl);
-          }
-          release = latestData;
-        }
-      } catch (e) { /* latest.json not available, fallback to GitHub API */ }
-
-      // ── 回退到 GitHub API ──
-      if (!release || assets.length === 0) {
-        const response = await fetch("https://api.github.com/repos/openakita/openakita/releases/latest", {
-          headers: { Accept: "application/vnd.github+json" },
-        });
-        if (!response.ok) throw new Error("release_request_failed");
-
-        const ghRelease = await response.json();
-        version = ghRelease.tag_name || "latest";
-        published = ghRelease.published_at ? formatDate(ghRelease.published_at) : "--";
-        htmlUrl = ghRelease.html_url || fallbackUrl;
-        assets = Array.isArray(ghRelease.assets) ? ghRelease.assets : [];
-        if (ghRelease.body) {
-          showReleaseNotes(ghRelease.body, version, htmlUrl);
-        }
-      }
-
-      if (versionNode) versionNode.textContent = version;
-      if (dateNode) dateNode.textContent = published;
-      if (notesNode) notesNode.href = htmlUrl;
-      if (desktopBtn) desktopBtn.href = htmlUrl;
-
-      var winAsset = pickReleaseAsset(assets, [/\.exe$/i, /\.msi$/i, /windows/i]);
-      var macAsset = pickReleaseAsset(assets, [/\.dmg$/i, /\.pkg$/i, /mac|darwin|osx/i]);
-      var linuxAsset = pickReleaseAsset(assets, [/\.appimage$/i, /\.deb$/i, /\.rpm$/i, /linux/i, /\.tar\.gz$/i]);
-
-      applyPlatformAsset({ buttonId: "downloadWindowsBtn", nameId: "windowsAssetName" }, winAsset, htmlUrl);
-      applyPlatformAsset({ buttonId: "downloadMacBtn", nameId: "macAssetName" }, macAsset, htmlUrl);
-      applyPlatformAsset({ buttonId: "downloadLinuxBtn", nameId: "linuxAssetName" }, linuxAsset, htmlUrl);
-
-      // ── 高亮推荐平台 + 一键下载按钮 ──
-      highlightRecommendedPlatform();
-      var os = detectOS();
-      var osAsset = os === "windows" ? winAsset : os === "macos" ? macAsset : os === "linux" ? linuxAsset : null;
-      if (osAsset) {
-        showPrimaryDownloadButton(os, osAsset, version);
-      }
-
-      if (assetsNode) {
-        assetsNode.innerHTML = "";
-
-        if (assets.length === 0) {
-          const li = document.createElement("li");
-          li.textContent = t("common.release.noAssets");
-          assetsNode.appendChild(li);
-        } else {
-          assets.slice(0, 8).forEach(function (asset) {
-            const li = document.createElement("li");
-            const a = document.createElement("a");
-            const sizeMb = asset.size ? (asset.size / 1024 / 1024).toFixed(1) + " MB" : "--";
-            a.href = asset.browser_download_url;
-            a.target = "_blank";
-            a.rel = "noreferrer noopener";
-            a.textContent = asset.name + " (" + sizeMb + ")";
-            li.appendChild(a);
-            assetsNode.appendChild(li);
-          });
-        }
-      }
-    } catch (error) {
-      if (versionNode) versionNode.textContent = t("common.release.viewReleases");
-      if (dateNode) dateNode.textContent = "--";
-      if (notesNode) notesNode.href = fallbackUrl;
-      if (desktopBtn) desktopBtn.href = fallbackUrl;
-      applyPlatformAsset({ buttonId: "downloadWindowsBtn", nameId: "windowsAssetName" }, null, fallbackUrl);
-      applyPlatformAsset({ buttonId: "downloadMacBtn", nameId: "macAssetName" }, null, fallbackUrl);
-      applyPlatformAsset({ buttonId: "downloadLinuxBtn", nameId: "linuxAssetName" }, null, fallbackUrl);
-      if (assetsNode) {
-        assetsNode.innerHTML =
-          '<li><a href="https://github.com/openakita/openakita/releases" target="_blank" rel="noreferrer noopener">' +
-          t("common.release.openReleases") +
-          "</a></li>";
+    // dev: latest-dev.json, fallback to GitHub API (latest release including pre-release)
+    if (!devManifest || !devManifest.version || !devManifest.downloads || Object.keys(devManifest.downloads).length === 0) {
+      var ghDev = await fetchGHRelease(true);
+      if (ghDev) {
+        var devDownloads = buildDownloadURLsFromGH(ghDev.tag_name, ghDev.assets || []);
+        devManifest = {
+          version: (ghDev.tag_name || "").replace(/^v/, ""),
+          pub_date: ghDev.published_at || "",
+          notes: ghDev.body || "",
+          downloads: devDownloads,
+        };
       }
     }
-  }
 
-  // ── Release notes summary (inserted into download page) ──
-  function showReleaseNotes(body, version, url) {
-    var target = document.getElementById("releaseNotesSummary");
-    if (!target || !body) return;
-    // Extract first 5 lines (bullet points) as summary
-    var lines = body.split("\n").filter(function(l) { return l.trim().length > 0; });
-    var summary = lines.slice(0, 8).join("\n");
-    if (lines.length > 8) summary += "\n...";
-    target.innerHTML = "";
-    var heading = document.createElement("h4");
-    heading.textContent = (version || "") + " \u66f4\u65b0\u65e5\u5fd7";
-    heading.style.marginBottom = "8px";
-    target.appendChild(heading);
-    var pre = document.createElement("div");
-    pre.style.cssText = "font-size:13px;line-height:1.7;color:var(--text-muted);white-space:pre-wrap;word-break:break-word;";
-    pre.textContent = summary;
-    target.appendChild(pre);
-    var link = document.createElement("a");
-    link.href = url || "#";
-    link.target = "_blank";
-    link.rel = "noreferrer noopener";
-    link.textContent = "\u67e5\u770b\u5b8c\u6574\u66f4\u65b0\u65e5\u5fd7 \u2192";
-    link.style.cssText = "display:inline-block;margin-top:8px;font-size:12px;color:var(--primary);";
-    target.appendChild(link);
-    target.style.display = "";
+    // stable: latest.json, fallback to GitHub API (latest non-prerelease)
+    if (!stableManifest || !stableManifest.version || !stableManifest.downloads || Object.keys(stableManifest.downloads).length === 0) {
+      var ghStable = await fetchGHRelease(false);
+      if (ghStable && !ghStable.prerelease) {
+        var stableDownloads = buildDownloadURLsFromGH(ghStable.tag_name, ghStable.assets || []);
+        stableManifest = {
+          version: (ghStable.tag_name || "").replace(/^v/, ""),
+          pub_date: ghStable.published_at || "",
+          notes: ghStable.body || "",
+          downloads: stableDownloads,
+        };
+      } else {
+        stableManifest = null;
+      }
+    }
+
+    // If versions are the same, only show one
+    if (devManifest && stableManifest && devManifest.version === stableManifest.version) {
+      stableManifest = null;
+    }
+
+    // Render channels
+    renderChannel("dev", devManifest, os);
+    renderChannel("stable", stableManifest, os);
+
+    // Update legacy elements (home page hero version badge etc.)
+    var displayManifest = devManifest || stableManifest;
+    var versionNode = document.getElementById("latestReleaseVersion");
+    var dateNode = document.getElementById("latestReleaseDate");
+    if (versionNode && displayManifest) versionNode.textContent = "v" + displayManifest.version;
+    if (dateNode && displayManifest) dateNode.textContent = displayManifest.pub_date ? formatDate(displayManifest.pub_date) : "--";
   }
 
   loadLatestRelease();
