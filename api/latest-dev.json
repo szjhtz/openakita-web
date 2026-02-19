@@ -1,28 +1,28 @@
 {
-  "version": "1.23.0",
-  "notes": "**Full Changelog**: https://github.com/openakita/openakita/compare/v1.22.9...v1.23.0",
-  "pub_date": "2026-02-19T16:41:39Z",
+  "version": "1.23.1",
+  "notes": "**Full Changelog**: https://github.com/openakita/openakita/compare/v1.23.0...v1.23.1",
+  "pub_date": "2026-02-19T20:00:02Z",
   "platforms": {},
   "downloads": {
     "windows": {
-      "name": "OpenAkita.Desktop_1.23.0_x64-setup-core.exe",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.23.0/OpenAkita.Desktop_1.23.0_x64-setup-core.exe",
-      "size": 74923068
+      "name": "OpenAkita.Desktop_1.23.1_x64-setup-core.exe",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.23.1/OpenAkita.Desktop_1.23.1_x64-setup-core.exe",
+      "size": 75008707
     },
     "windows-full": {
-      "name": "OpenAkita.Desktop_1.23.0_x64-setup-full.exe",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.23.0/OpenAkita.Desktop_1.23.0_x64-setup-full.exe",
-      "size": 286389001
+      "name": "OpenAkita.Desktop_1.23.1_x64-setup-full.exe",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.23.1/OpenAkita.Desktop_1.23.1_x64-setup-full.exe",
+      "size": 286459478
     },
     "macos": {
-      "name": "OpenAkita.Desktop_1.23.0_aarch64.dmg",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.23.0/OpenAkita.Desktop_1.23.0_aarch64.dmg",
-      "size": 94566624
+      "name": "OpenAkita.Desktop_1.23.1_aarch64.dmg",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.23.1/OpenAkita.Desktop_1.23.1_aarch64.dmg",
+      "size": 94640803
     },
     "linux-deb": {
-      "name": "OpenAkita.Desktop_1.23.0_amd64.deb",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.23.0/OpenAkita.Desktop_1.23.0_amd64.deb",
-      "size": 144143242
+      "name": "OpenAkita.Desktop_1.23.1_amd64.deb",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.23.1/OpenAkita.Desktop_1.23.1_amd64.deb",
+      "size": 144212822
     }
   }
 }
