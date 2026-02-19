@@ -1,33 +1,28 @@
 {
-  "version": "1.21.9",
-  "notes": "**Full Changelog**: https://github.com/openakita/openakita/compare/v1.21.8...v1.21.9",
-  "pub_date": "2026-02-14T00:00:00Z",
+  "version": "1.23.0",
+  "notes": "**Full Changelog**: https://github.com/openakita/openakita/compare/v1.22.9...v1.23.0\n\n**Full Changelog**: https://github.com/openakita/openakita/compare/v1.22.9...v1.23.0",
+  "pub_date": "2026-02-19T16:41:39Z",
   "platforms": {},
   "downloads": {
     "windows": {
-      "name": "OpenAkita.Desktop_1.21.9_x64-setup-core.exe",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.21.9/OpenAkita.Desktop_1.21.9_x64-setup-core.exe",
-      "size": 67620222
+      "name": "OpenAkita.Desktop_1.23.0_x64-setup-core.exe",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.23.0/OpenAkita.Desktop_1.23.0_x64-setup-core.exe",
+      "size": 74924220
     },
     "windows-full": {
-      "name": "OpenAkita.Desktop_1.21.9_x64-setup-full.exe",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.21.9/OpenAkita.Desktop_1.21.9_x64-setup-full.exe",
-      "size": 285149018
+      "name": "OpenAkita.Desktop_1.23.0_x64-setup-full.exe",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.23.0/OpenAkita.Desktop_1.23.0_x64-setup-full.exe",
+      "size": 286368584
     },
     "macos": {
-      "name": "OpenAkita.Desktop_1.21.9_aarch64.dmg",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.21.9/OpenAkita.Desktop_1.21.9_aarch64.dmg",
-      "size": 85481155
-    },
-    "linux-appimage": {
-      "name": "OpenAkita.Desktop_1.21.9_amd64.AppImage",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.21.9/OpenAkita.Desktop_1.21.9_amd64.AppImage",
-      "size": 184764920
+      "name": "OpenAkita.Desktop_1.23.0_aarch64.dmg",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.23.0/OpenAkita.Desktop_1.23.0_aarch64.dmg",
+      "size": 94566507
     },
     "linux-deb": {
-      "name": "OpenAkita.Desktop_1.21.9_amd64.deb",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.21.9/OpenAkita.Desktop_1.21.9_amd64.deb",
-      "size": 124558162
+      "name": "OpenAkita.Desktop_1.23.0_amd64.deb",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.23.0/OpenAkita.Desktop_1.23.0_amd64.deb",
+      "size": 144146546
     }
   }
 }
