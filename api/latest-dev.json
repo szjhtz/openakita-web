@@ -12,12 +12,12 @@
     "windows-full": {
       "name": "OpenAkita.Desktop_1.23.2_x64-setup-full.exe",
       "url": "https://github.com/openakita/openakita/releases/download/v1.23.2/OpenAkita.Desktop_1.23.2_x64-setup-full.exe",
-      "size": 417513333
+      "size": 417561502
     },
     "macos": {
       "name": "OpenAkita.Desktop_1.23.2_aarch64.dmg",
       "url": "https://github.com/openakita/openakita/releases/download/v1.23.2/OpenAkita.Desktop_1.23.2_aarch64.dmg",
-      "size": 277358583
+      "size": 277390974
     },
     "linux-deb": {
       "name": "OpenAkita.Desktop_1.23.2_amd64.deb",
