@@ -1209,6 +1209,228 @@ section[id] {
   font-size: 14px;
 }
 
+.tutorial-link-panel {
+  display: block;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tutorial-link-panel:hover {
+  transform: translateY(-2px);
+}
+
+.tutorial-link-panel:hover .tutorial-panel {
+  border-color: rgba(43, 124, 203, 0.62);
+}
+
+.tutorial-link-panel:focus-visible {
+  outline: 2px solid rgba(43, 124, 203, 0.6);
+  outline-offset: 2px;
+}
+
+.tutorial-link-panel .tutorial-panel {
+  position: relative;
+  padding-right: 52px;
+}
+
+.tutorial-link-arrow {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tutorial-link-arrow img {
+  width: 14px;
+  height: 14px;
+}
+
+.setup-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 30, 54, 0.44);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.24s ease;
+  z-index: 70;
+}
+
+.setup-drawer-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.setup-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: min(94vw, 1180px);
+  background: linear-gradient(180deg, rgba(247, 252, 255, 0.99), rgba(239, 248, 255, 0.98));
+  border-right: 1px solid rgba(117, 175, 221, 0.46);
+  box-shadow: 18px 0 52px rgba(8, 50, 90, 0.22);
+  transform: translateX(-104%);
+  transition: transform 0.28s ease;
+  z-index: 71;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.setup-drawer.is-open {
+  transform: translateX(0);
+}
+
+.setup-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(117, 175, 221, 0.35);
+  background: rgba(252, 255, 255, 0.85);
+}
+
+.setup-drawer-title {
+  margin: 0;
+  font-size: 22px;
+}
+
+.setup-drawer-close {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid rgba(117, 175, 221, 0.56);
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--primary-strong);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.setup-drawer-body {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+}
+
+.setup-drawer-nav {
+  border-right: 1px solid rgba(117, 175, 221, 0.3);
+  padding: 14px 12px;
+  overflow: auto;
+  background: rgba(243, 250, 255, 0.85);
+}
+
+.setup-drawer-nav a {
+  display: block;
+  border-radius: 10px;
+  padding: 9px 10px;
+  color: var(--primary-strong);
+  text-decoration: none;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.setup-drawer-nav a:hover {
+  background: rgba(221, 239, 255, 0.9);
+}
+
+.setup-drawer-nav a.setup-nav-l1 {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.setup-drawer-nav a.setup-nav-l2 {
+  font-size: 13px;
+  font-weight: 700;
+  padding-left: 18px;
+  color: #2f577b;
+}
+
+.setup-drawer-nav a.setup-nav-l3 {
+  font-size: 12px;
+  font-weight: 600;
+  padding-left: 28px;
+  color: #476b8e;
+}
+
+.setup-drawer-content {
+  min-height: 0;
+  overflow: auto;
+  padding: 16px;
+}
+
+.setup-drawer-content section {
+  scroll-margin-top: 12px;
+  margin-bottom: 18px;
+}
+
+.setup-drawer-content h3 {
+  margin: 0 0 10px;
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.setup-drawer-content h4 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--primary-strong);
+}
+
+.setup-drawer-content h5 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  line-height: 1.3;
+  color: #385d81;
+}
+
+.setup-drawer-content .tutorial-shot {
+  margin: 14px 0 18px;
+}
+
+.setup-drawer-open {
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .setup-drawer {
+    width: 100vw;
+    max-width: 100vw;
+  }
+
+  .setup-drawer-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .setup-drawer-nav {
+    border-right: 0;
+    border-bottom: 1px solid rgba(117, 175, 221, 0.3);
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 10px 12px;
+  }
+
+  .setup-drawer-nav a {
+    white-space: nowrap;
+    margin-bottom: 0;
+  }
+}
+
 .image-placeholder {
   margin-top: 10px;
   border-radius: 14px;

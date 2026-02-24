@@ -118,7 +118,7 @@
           title: "AI 助手安装与初始配置",
           desc: "从安装到首次验证的完整路径。",
         },
-        side: ["教程概览", "环境要求", "方式一：Desktop", "方式二：PyPI", "方式三：源码", "首次启动验证", "视频教程", "参考文档"],
+        side: ["教程概览", "环境要求", "安装OpenAkita", "启动验证"],
       },
       im: {
         meta: {
@@ -248,7 +248,7 @@
           title: "Assistant Setup and Initial Configuration",
           desc: "A complete path from installation to first-run validation.",
         },
-        side: ["Overview", "Requirements", "Option 1: Desktop", "Option 2: PyPI", "Option 3: Source", "First-Run Validation", "Video", "References"],
+        side: ["Overview", "Requirements", "Install OpenAkita", "Startup Validation"],
       },
       im: {
         meta: {
@@ -300,7 +300,7 @@
       tutorials: { hero: { title: "チュートリアルセンター", desc: "インストール、IM 連携、LLM 設定を網羅。" } },
       setup: {
         hero: { title: "初期セットアップ", desc: "Desktop と CLI の導入手順。" },
-        side: ["概要", "要件", "方法1: Desktop", "方法2: PyPI", "方法3: ソース", "初回検証", "動画", "参考資料"],
+        side: ["概要", "要件", "OpenAkita のインストール", "起動検証"],
       },
       im: {
         hero: { title: "IM チャネル設定", desc: "各プラットフォームの申請と接続手順（QQ公式ボットとOneBotを含む）。" },
@@ -329,7 +329,7 @@
       tutorials: { hero: { title: "튜토리얼 센터", desc: "설치, IM 연동, LLM 설정을 다룹니다." } },
       setup: {
         hero: { title: "초기 설정", desc: "Desktop 및 CLI 설치 가이드." },
-        side: ["개요", "요구 사항", "방법 1: Desktop", "방법 2: PyPI", "방법 3: 소스", "최초 검증", "영상", "참고 자료"],
+        side: ["개요", "요구 사항", "OpenAkita 설치", "시작 검증"],
       },
       im: {
         hero: { title: "IM 채널 설정", desc: "플랫폼 신청 및 연동 절차(QQ 공식 봇과 OneBot 포함)." },
@@ -358,7 +358,7 @@
       tutorials: { hero: { title: "Центр руководств", desc: "Установка, IM-каналы и настройка LLM." } },
       setup: {
         hero: { title: "Начальная установка", desc: "Пошаговый гайд для Desktop и CLI." },
-        side: ["Обзор", "Требования", "Вариант 1: Desktop", "Вариант 2: PyPI", "Вариант 3: Source", "Первая проверка", "Видео", "Ссылки"],
+        side: ["Обзор", "Требования", "Установка OpenAkita", "Проверка запуска"],
       },
       im: {
         hero: { title: "Настройка IM-каналов", desc: "Подключение платформ и конфигурация (включая QQ Official Bot и OneBot)." },
@@ -387,7 +387,7 @@
       tutorials: { hero: { title: "Centre de tutoriels", desc: "Installation, canaux IM et configuration LLM." } },
       setup: {
         hero: { title: "Installation initiale", desc: "Guide Desktop et CLI étape par étape." },
-        side: ["Aperçu", "Prérequis", "Option 1 : Desktop", "Option 2 : PyPI", "Option 3 : Source", "Vérification", "Vidéo", "Références"],
+        side: ["Aperçu", "Prérequis", "Installer OpenAkita", "Vérification du démarrage"],
       },
       im: {
         hero: { title: "Configuration des canaux IM", desc: "Onboarding des plateformes et intégration (QQ Bot officiel et OneBot inclus)." },
@@ -416,7 +416,7 @@
       tutorials: { hero: { title: "Tutorial-Zentrum", desc: "Installation, IM-Kanäle und LLM-Konfiguration." } },
       setup: {
         hero: { title: "Ersteinrichtung", desc: "Schritt-für-Schritt für Desktop und CLI." },
-        side: ["Überblick", "Voraussetzungen", "Option 1: Desktop", "Option 2: PyPI", "Option 3: Source", "Erstprüfung", "Video", "Referenzen"],
+        side: ["Überblick", "Voraussetzungen", "OpenAkita installieren", "Startprüfung"],
       },
       im: {
         hero: { title: "IM-Kanal-Konfiguration", desc: "Plattform-Onboarding und Integration (inkl. QQ Official Bot und OneBot)." },
@@ -1085,6 +1085,7 @@
   applyHomeRevealStagger();
   injectLanguageSwitcher(pageKey);
   enhanceCodeBlocks();
+  initSetupInstallDrawer();
 
   function recoverBrokenSvgIcons() {
     const svgImages = document.querySelectorAll('img[src$=".svg"]');
@@ -1117,6 +1118,123 @@
   }
 
   recoverBrokenSvgIcons();
+
+  function initSetupInstallDrawer() {
+    const triggers = Array.from(document.querySelectorAll("[data-setup-method]"));
+    const drawer = document.querySelector("[data-setup-drawer]");
+    const backdrop = document.querySelector("[data-setup-drawer-backdrop]");
+    const closeBtn = document.querySelector("[data-setup-drawer-close]");
+    const titleNode = document.querySelector("[data-setup-drawer-title]");
+    const navNode = document.querySelector("[data-setup-drawer-nav]");
+    const contentNode = document.querySelector("[data-setup-drawer-content]");
+
+    if (!triggers.length || !drawer || !backdrop || !closeBtn || !titleNode || !navNode || !contentNode) return;
+
+    const methodMap = {
+      desktop: {
+        title: "方式一：Desktop（配置向导）",
+        templateId: "setup-drawer-template-desktop",
+        chapters: [
+          { id: "drawer-desktop-start", label: "0. 启动应用" },
+          { id: "drawer-desktop-mode", label: "1. 选择配置模式" },
+          { id: "drawer-desktop-quick-overview", label: "2. 快速配置概览" },
+          { id: "drawer-desktop-quick-llm", label: "2.1 填写LLM 端点参数" },
+          { id: "drawer-desktop-quick-im", label: "2.2 填写 IM 通道参数" },
+          { id: "drawer-desktop-quick-auto", label: "2.3 开始配置" },
+          { id: "drawer-desktop-quick-done", label: "2.4 配置完成" },
+          { id: "drawer-desktop-full-overview", label: "3. 完整配置" },
+          { id: "drawer-desktop-full-workspace", label: "3.1 工作区" },
+          { id: "drawer-desktop-full-python", label: "3.2 Python 环境" },
+          { id: "drawer-desktop-full-install", label: "3.3 安装" },
+          { id: "drawer-desktop-full-llm", label: "3.4 LLM 端点" },
+          { id: "drawer-desktop-full-im", label: "3.5 IM 通道" },
+          { id: "drawer-desktop-full-tools", label: "3.6 工具与技能" },
+          { id: "drawer-desktop-full-agent", label: "3.7 Agent 与系统" },
+          { id: "drawer-desktop-full-done", label: "3.8 完成" },
+        ],
+      },
+      pypi: {
+        title: "方式二：PyPI CLI",
+        templateId: "setup-drawer-template-pypi",
+        chapters: [
+          { id: "drawer-pypi-install", label: "1. 安装步骤" },
+          { id: "drawer-pypi-verify", label: "2. 启动验证" },
+        ],
+      },
+      source: {
+        title: "方式三：源码安装",
+        templateId: "setup-drawer-template-source",
+        chapters: [
+          { id: "drawer-source-install", label: "1. 安装步骤" },
+          { id: "drawer-source-check", label: "2. 必查项" },
+          { id: "drawer-source-verify", label: "3. 启动验证" },
+        ],
+      },
+    };
+
+    function closeDrawer() {
+      drawer.classList.remove("is-open");
+      backdrop.classList.remove("is-open");
+      drawer.setAttribute("aria-hidden", "true");
+      backdrop.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("setup-drawer-open");
+    }
+
+    function openDrawer(method) {
+      const config = methodMap[method];
+      if (!config) return;
+      const template = document.getElementById(config.templateId);
+      if (!template) return;
+
+      titleNode.textContent = config.title;
+      navNode.innerHTML = "";
+      contentNode.innerHTML = "";
+      contentNode.appendChild(template.content.cloneNode(true));
+
+      config.chapters.forEach(function (chapter) {
+        const link = document.createElement("a");
+        link.href = "#" + chapter.id;
+        link.textContent = chapter.label;
+        const match = chapter.label.match(/^(\d+)(?:\.(\d+))?(?:\.(\d+))?/);
+        if (match) {
+          if (match[3] !== undefined) link.classList.add("setup-nav-l3");
+          else if (match[2] !== undefined) link.classList.add("setup-nav-l2");
+          else link.classList.add("setup-nav-l1");
+        } else {
+          link.classList.add("setup-nav-l1");
+        }
+        link.addEventListener("click", function (event) {
+          event.preventDefault();
+          const target = contentNode.querySelector("#" + chapter.id);
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+        navNode.appendChild(link);
+      });
+
+      enhanceCodeBlocks();
+      drawer.classList.add("is-open");
+      backdrop.classList.add("is-open");
+      drawer.setAttribute("aria-hidden", "false");
+      backdrop.setAttribute("aria-hidden", "false");
+      document.body.classList.add("setup-drawer-open");
+    }
+
+    triggers.forEach(function (trigger) {
+      trigger.addEventListener("click", function () {
+        openDrawer(trigger.getAttribute("data-setup-method"));
+      });
+    });
+
+    closeBtn.addEventListener("click", closeDrawer);
+    backdrop.addEventListener("click", closeDrawer);
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && drawer.classList.contains("is-open")) {
+        closeDrawer();
+      }
+    });
+  }
 
   function formatDate(dateString) {
     try {
