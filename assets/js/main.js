@@ -698,6 +698,7 @@
       enhanceCodeBlocks();
       loadLatestRelease();
       void autoTranslateSiteContent();
+      document.dispatchEvent(new CustomEvent("openakita:language-changed"));
     });
 
     wrapper.appendChild(label);
@@ -1021,6 +1022,81 @@
     enhanceCodeBlocks();
   }
 
+  async function autoTranslateInContainer(root) {
+    if (!root || currentLanguage === "zh" || !AUTO_TRANSLATE_SUPPORTED.has(currentLanguage)) {
+      return;
+    }
+
+    await ensurePrebuiltTranslateCacheLoaded();
+
+    const meaningfulPattern = /[\u4e00-\u9fffA-Za-z]/;
+    const entries = [];
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let node = walker.nextNode();
+
+    while (node) {
+      const parent = node.parentElement;
+      if (!parent || parent.closest("script,style,noscript,textarea,code,pre,.code-block")) {
+        node = walker.nextNode();
+        continue;
+      }
+
+      const raw = node.nodeValue || "";
+      const match = raw.match(/^(\s*)([\s\S]*?)(\s*)$/);
+      if (!match) {
+        node = walker.nextNode();
+        continue;
+      }
+
+      const prefix = match[1];
+      const core = match[2];
+      const suffix = match[3];
+
+      if (!core || !meaningfulPattern.test(core) || core.trim().startsWith("©")) {
+        node = walker.nextNode();
+        continue;
+      }
+
+      entries.push({ node: node, prefix: prefix, core: core, suffix: suffix });
+      node = walker.nextNode();
+    }
+
+    if (!entries.length) return;
+
+    const cache = loadAutoTranslateCache();
+    cache[currentLanguage] = cache[currentLanguage] || {};
+    const langCache = cache[currentLanguage];
+
+    const uniqueSources = Array.from(
+      new Set(
+        entries
+          .map(function (entry) {
+            return entry.core;
+          })
+          .filter(function (text) {
+            return text && text.trim().length > 0;
+          })
+      )
+    );
+
+    const missingSources = uniqueSources.filter(function (source) {
+      return !langCache[source];
+    });
+
+    if (missingSources.length > 0) {
+      const translated = await translateMissingTexts(missingSources, currentLanguage);
+      Object.keys(translated).forEach(function (source) {
+        langCache[source] = translated[source];
+      });
+      saveAutoTranslateCache();
+    }
+
+    entries.forEach(function (entry) {
+      const translatedCore = langCache[entry.core] || entry.core;
+      entry.node.nodeValue = entry.prefix + translatedCore + entry.suffix;
+    });
+  }
+
   const navToggle = document.querySelector(".nav-toggle");
   const nav = document.querySelector(".main-nav");
 
@@ -1127,6 +1203,7 @@
     const titleNode = document.querySelector("[data-setup-drawer-title]");
     const navNode = document.querySelector("[data-setup-drawer-nav]");
     const contentNode = document.querySelector("[data-setup-drawer-content]");
+    let activeMethod = null;
 
     if (!triggers.length || !drawer || !backdrop || !closeBtn || !titleNode || !navNode || !contentNode) return;
 
@@ -1185,6 +1262,7 @@
       if (!config) return;
       const template = document.getElementById(config.templateId);
       if (!template) return;
+      activeMethod = method;
 
       titleNode.textContent = config.title;
       navNode.innerHTML = "";
@@ -1214,6 +1292,7 @@
       });
 
       enhanceCodeBlocks();
+      void autoTranslateInContainer(drawer);
       drawer.classList.add("is-open");
       backdrop.classList.add("is-open");
       drawer.setAttribute("aria-hidden", "false");
@@ -1233,6 +1312,11 @@
       if (event.key === "Escape" && drawer.classList.contains("is-open")) {
         closeDrawer();
       }
+    });
+
+    document.addEventListener("openakita:language-changed", function () {
+      if (!drawer.classList.contains("is-open") || !activeMethod) return;
+      openDrawer(activeMethod);
     });
   }
 
