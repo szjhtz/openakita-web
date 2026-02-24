@@ -75,12 +75,6 @@
 <article class="step"><div class="index">2</div><div><h4 data-i18n="setup.0017">执行初始化</h4><p data-i18n="setup.0018">运行 `openakita init` 生成 `.env` 与必要目录。</p></div></article>
 <article class="step"><div class="index">3</div><div><h4 data-i18n="setup.0019">做首次验证</h4><p data-i18n="setup.0020">确认对话、任务执行与日志输出全部正常。</p></div></article>
 </div>
-<div class="image-placeholder">
-<div>
-<strong data-i18n="setup.0021">配图位：安装流程总览图</strong>
-<span data-i18n="setup.0022">建议放：安装方式选择 -&gt; 初始化 -&gt; 首次验证 -&gt; 接入 IM/LLM</span>
-</div>
-</div>
 </div>
 </section>
 <section class="tutorial-section" id="requirements">
@@ -143,13 +137,11 @@
 </tbody>
 </table>
 </div>
-<div class="image-placeholder">
-<div>
-<strong data-i18n="setup.0058">配图位：首次启动主界面</strong>
-<span data-i18n="setup.0059">建议放 Desktop 启动后自动进入配置向导的页面</span>
-</div>
-</div>
 <h3 data-i18n="setup.0060" style="margin-top: 14px;">1. 选择配置模式</h3>
+<figure class="tutorial-shot">
+<img alt="Desktop 启动后自动进入配置向导页面" loading="lazy" decoding="async" src="../../assets/img/tutorials/setup-install/应用启动后的主界面.png"/>
+<figcaption>Desktop 启动后自动进入配置向导。</figcaption>
+</figure>
 <div class="table-wrap">
 <table>
 <thead>
@@ -177,18 +169,14 @@
 </table>
 </div>
 <div class="tutorial-grid">
-<div class="image-placeholder">
-<div>
-<strong data-i18n="setup.0073">配图位：模式选择页</strong>
-<span data-i18n="setup.0074">建议放快速配置 / 完整配置两张卡片</span>
-</div>
-</div>
-<div class="image-placeholder">
-<div>
-<strong data-i18n="setup.0075">配图位：切换模式入口</strong>
-<span data-i18n="setup.0076">建议放侧边栏中的切换配置模式按钮</span>
-</div>
-</div>
+<figure class="tutorial-shot">
+<img alt="快速配置和完整配置模式选择卡片" loading="lazy" decoding="async" src="../../assets/img/tutorials/setup-install/完整配置-角色选择卡片.png"/>
+<figcaption>配置模式选择：快速配置 / 完整配置。</figcaption>
+</figure>
+<figure class="tutorial-shot">
+<img alt="模式切换入口页面" loading="lazy" decoding="async" src="../../assets/img/tutorials/setup-install/完整配置-角色选择卡片.png"/>
+<figcaption>侧边栏中的配置模式切换入口。</figcaption>
+</figure>
 </div>
 <h3 data-i18n="setup.0077" style="margin-top: 14px;">2. 快速配置（约 3 分钟）</h3>
 <p data-i18n="setup.0078">快速配置会自动创建默认工作区、安装内置 Python、创建虚拟环境并安装依赖。你只需补全 LLM 端点，IM 通道可选。</p>
@@ -200,25 +188,19 @@
 <article class="step"><div class="index">5</div><div><h4 data-i18n="setup.0087">完成并启动服务</h4><p data-i18n="setup.0088">在完成页查看工作区、端点和 IM 摘要，点击“启动服务”进入状态面板。</p></div></article>
 </div>
 <div class="tutorial-grid">
-<div class="image-placeholder">
-<div>
-<strong data-i18n="setup.0089">配图位：快速配置填写页</strong>
-<span data-i18n="setup.0090">建议放 LLM 端点对话框（含高级选项展开）</span>
+<figure class="tutorial-shot">
+<img alt="快速配置填写页全貌" loading="lazy" decoding="async" src="../../assets/img/tutorials/setup-install/快速配置 - 填写配置页面全貌.png"/>
+<figcaption>快速配置填写页（含 LLM 端点配置）。</figcaption>
+</figure>
+<figure class="tutorial-shot">
+<img alt="快速配置中的 IM 通道配置区域" loading="lazy" decoding="async" src="../../assets/img/tutorials/setup-install/快速配置-IM 通道配置区域（展开后）.png"/>
+<figcaption>快速配置中的 IM 通道配置区域。</figcaption>
+</figure>
 </div>
-</div>
-<div class="image-placeholder">
-<div>
-<strong data-i18n="setup.0091">配图位：IM 通道填写页</strong>
-<span data-i18n="setup.0092">建议放 IM 区域展开后的配置表单</span>
-</div>
-</div>
-</div>
-<div class="image-placeholder">
-<div>
-<strong data-i18n="setup.0093">配图位：自动配置进度页</strong>
-<span data-i18n="setup.0094">建议放创建工作区、安装 Python、安装依赖、写入配置的分步进度</span>
-</div>
-</div>
+<figure class="tutorial-shot">
+<img alt="快速配置自动配置进度页面" loading="lazy" decoding="async" src="../../assets/img/tutorials/setup-install/快速配置-自动配置进度页面.png"/>
+<figcaption>自动配置进度：工作区、Python、依赖安装与配置写入。</figcaption>
+</figure>
 <ul class="checklist">
 <li>自动步骤包含：创建默认工作区、安装内置 Python 3.11、创建 venv、安装 <code>openakita[all]</code>、写入默认配置。</li>
 <li data-i18n="setup.0095">网络异常导致失败时，可返回模式选择切换到完整配置进行手动排查。</li>
@@ -289,25 +271,19 @@
 </table>
 </div>
 <div class="tutorial-grid">
-<div class="image-placeholder">
-<div>
-<strong data-i18n="setup.0126">配图位：完整配置-Python 检测页</strong>
-<span data-i18n="setup.0127">建议放内置 Python 安装与系统 Python 检测结果</span>
+<figure class="tutorial-shot">
+<img alt="完整配置中的 Python 环境检测与配置页面" loading="lazy" decoding="async" src="../../assets/img/tutorials/setup-install/完整配置-Python 环境配置页面.png"/>
+<figcaption>完整配置中的 Python 检测与环境配置。</figcaption>
+</figure>
+<figure class="tutorial-shot">
+<img alt="完整配置中的 LLM 多端点配置页面" loading="lazy" decoding="async" src="../../assets/img/tutorials/setup-install/完整配置-LLM 端点配置页面.png"/>
+<figcaption>完整配置中的 LLM 多端点与优先级设置。</figcaption>
+</figure>
 </div>
-</div>
-<div class="image-placeholder">
-<div>
-<strong data-i18n="setup.0128">配图位：完整配置-LLM 端点页</strong>
-<span data-i18n="setup.0129">建议放多端点列表、优先级和能力标签配置</span>
-</div>
-</div>
-</div>
-<div class="image-placeholder">
-<div>
-<strong data-i18n="setup.0130">配图位：完整配置-完成页</strong>
-<span data-i18n="setup.0131">建议放配置摘要、启动服务按钮与状态面板入口</span>
-</div>
-</div>
+<figure class="tutorial-shot">
+<img alt="完整配置完成页与启动服务入口" loading="lazy" decoding="async" src="../../assets/img/tutorials/setup-install/完整配置-完成页面.png"/>
+<figcaption>完整配置完成页：配置摘要与启动服务入口。</figcaption>
+</figure>
 <h3 data-i18n="setup.0132" style="margin-top: 14px;">4. 配置完成后的文件位置</h3>
 <p data-i18n="setup.0133">向导会把配置写入工作区目录。建议通过桌面端修改配置，避免手工编辑导致格式错误。</p>
 <div class="code-block"><code># 环境变量文件
@@ -346,7 +322,10 @@ openakita init
 # 6) 启动交互模式
 openakita</code></div>
 <p class="notice" data-i18n="setup.0137">按需安装可选包：`openakita[feishu]`、`openakita[whisper]`、`openakita[browser]` 等。</p>
-<div class="image-placeholder"><div><strong data-i18n="setup.0138">配图位：命令行安装截图</strong><span data-i18n="setup.0139">建议放 pip 安装和 init 成功输出</span></div></div>
+<figure class="tutorial-shot">
+<img alt="安装过程日志输出页面" loading="lazy" decoding="async" src="../../assets/img/tutorials/setup-install/完整安装-安装进度和日志输出.png"/>
+<figcaption>安装过程日志输出示例。</figcaption>
+</figure>
 </div>
 </section>
 <section class="tutorial-section" id="source">
@@ -420,8 +399,14 @@ openakita run "创建一个带测试的 Python 计算器"</code></div>
 <p data-i18n="setup.0159" style="margin-top: 10px; color: var(--text-muted);">示例：将 `&lt;iframe src="..."&gt;&lt;/iframe&gt;` 直接替换到上方容器中。</p>
 </div>
 <div class="tutorial-grid">
-<div class="image-placeholder"><div><strong data-i18n="setup.0160">配图位：视频封面图 1</strong><span data-i18n="setup.0161">安装与启动</span></div></div>
-<div class="image-placeholder"><div><strong data-i18n="setup.0162">配图位：视频封面图 2</strong><span data-i18n="setup.0163">常见错误与排障</span></div></div>
+<figure class="tutorial-shot">
+<img alt="快速配置完成页面截图" loading="lazy" decoding="async" src="../../assets/img/tutorials/setup-install/快速配置-快速配置完成页面.png"/>
+<figcaption>安装与启动</figcaption>
+</figure>
+<figure class="tutorial-shot">
+<img alt="完整配置安装日志页面截图" loading="lazy" decoding="async" src="../../assets/img/tutorials/setup-install/完整安装-安装进度和日志输出.png"/>
+<figcaption>常见错误与排障</figcaption>
+</figure>
 </div>
 </div>
 </section>
@@ -470,4 +455,3 @@ openakita run "创建一个带测试的 Python 计算器"</code></div>
   <script src="../../assets/js/main.js"></script>
 </body>
 </html>
-

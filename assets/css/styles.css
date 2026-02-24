@@ -826,6 +826,14 @@ body[data-page="home"] .hero-actions {
   color: #095f5e;
 }
 
+.tutorial-section .notice {
+  margin: 20px 0;
+}
+
+.tutorial-section .table-wrap {
+  margin: 20px 0;
+}
+
 .table-wrap {
   overflow-x: auto;
   border-radius: var(--radius-md);
@@ -1225,6 +1233,28 @@ section[id] {
 
 .image-placeholder span {
   font-size: 13px;
+}
+
+.tutorial-shot {
+  margin: 20px 0;
+  border-radius: 14px;
+  border: 1px solid rgba(119, 175, 220, 0.45);
+  background: rgba(255, 255, 255, 0.9);
+  overflow: hidden;
+}
+
+.tutorial-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #f3f8fc;
+}
+
+.tutorial-shot figcaption {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--text-dim);
+  border-top: 1px solid rgba(119, 175, 220, 0.32);
 }
 
 .feature-list,
