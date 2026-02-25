@@ -840,11 +840,15 @@
     if (typeof core !== "string" || !core) return core;
     if (/[\u4e00-\u9fff]/.test(core)) return core;
 
-    const currentReverse = getReverseSourceLookup(currentLanguage);
-    if (currentReverse.has(core)) return currentReverse.get(core);
+    const candidates = [currentLanguage, "en"].concat(Array.from(AUTO_TRANSLATE_SUPPORTED));
+    const seen = new Set();
 
-    const englishReverse = getReverseSourceLookup("en");
-    if (englishReverse.has(core)) return englishReverse.get(core);
+    for (const lang of candidates) {
+      if (!lang || seen.has(lang)) continue;
+      seen.add(lang);
+      const reverse = getReverseSourceLookup(lang);
+      if (reverse.has(core)) return reverse.get(core);
+    }
 
     return core;
   }
@@ -890,7 +894,7 @@
     if (setupDrawer) roots.push(setupDrawer);
 
     const entries = [];
-    const meaningfulPattern = /[\u4e00-\u9fffA-Za-z]/;
+    const meaningfulPattern = /[\p{L}\p{N}]/u;
 
     roots.forEach(function (root) {
       const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
@@ -934,6 +938,18 @@
         if (!sourceCore) {
           sourceCore = inferSourceCore(core);
           contentTextSourceMap.set(node, sourceCore);
+        } else if (!/[\u4e00-\u9fff]/.test(sourceCore)) {
+          const recoveredFromCore = inferSourceCore(core);
+          if (recoveredFromCore && recoveredFromCore !== sourceCore) {
+            sourceCore = recoveredFromCore;
+            contentTextSourceMap.set(node, sourceCore);
+          } else {
+            const recoveredFromStored = inferSourceCore(sourceCore);
+            if (recoveredFromStored && recoveredFromStored !== sourceCore) {
+              sourceCore = recoveredFromStored;
+              contentTextSourceMap.set(node, sourceCore);
+            }
+          }
         }
 
         if (currentLanguage === "zh") {
@@ -1059,7 +1075,7 @@
             return entry && typeof entry.source === "string" ? entry.source : "";
           })
           .filter(function (text) {
-            return text.trim().length > 0 && /[\u4e00-\u9fff]/.test(text);
+            return text.trim().length > 0 && /[\p{L}\p{N}]/u.test(text);
           })
       )
     );
