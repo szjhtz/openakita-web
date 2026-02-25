@@ -7,12 +7,12 @@
     "windows": {
       "name": "OpenAkita.Desktop_1.24.2_x64-setup-core.exe",
       "url": "https://github.com/openakita/openakita/releases/download/v1.24.2/OpenAkita.Desktop_1.24.2_x64-setup-core.exe",
-      "size": 288349785
+      "size": 288394308
     },
     "linux-deb-ubuntu22-amd64": {
       "name": "OpenAkita.Desktop_1.24.2_amd64-ubuntu22-amd64.deb",
       "url": "https://github.com/openakita/openakita/releases/download/v1.24.2/OpenAkita.Desktop_1.24.2_amd64-ubuntu22-amd64.deb",
-      "size": 572004930
+      "size": 572029396
     },
     "linux-deb-ubuntu22-arm64": {
       "name": "OpenAkita.Desktop_1.24.2_arm64-ubuntu22-arm64.deb",
@@ -22,12 +22,12 @@
     "linux-deb-ubuntu24-amd64": {
       "name": "OpenAkita.Desktop_1.24.2_amd64-ubuntu24-amd64.deb",
       "url": "https://github.com/openakita/openakita/releases/download/v1.24.2/OpenAkita.Desktop_1.24.2_amd64-ubuntu24-amd64.deb",
-      "size": 633316362
+      "size": 633324340
     },
     "linux-deb-ubuntu24-arm64": {
       "name": "OpenAkita.Desktop_1.24.2_arm64-ubuntu24-arm64.deb",
       "url": "https://github.com/openakita/openakita/releases/download/v1.24.2/OpenAkita.Desktop_1.24.2_arm64-ubuntu24-arm64.deb",
-      "size": 382768622
+      "size": 382825434
     }
   }
 }
