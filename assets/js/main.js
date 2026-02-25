@@ -775,6 +775,7 @@
 
   const contentTextSourceMap = new WeakMap();
   let autoTranslateCache = null;
+  let reverseSourceLookupByLang = {};
   let autoTranslateRunId = 0;
   let prebuiltCacheMerged = false;
   let prebuiltCachePromise = null;
@@ -791,11 +792,40 @@
 
   function saveAutoTranslateCache() {
     if (!autoTranslateCache) return;
+    reverseSourceLookupByLang = {};
     try {
       localStorage.setItem(AUTO_TRANSLATE_CACHE_KEY, JSON.stringify(autoTranslateCache));
     } catch (error) {
       // Ignore quota errors and keep in-memory cache.
     }
+  }
+
+  function getReverseSourceLookup(lang) {
+    if (reverseSourceLookupByLang[lang]) return reverseSourceLookupByLang[lang];
+    const cache = loadAutoTranslateCache();
+    const langCache = cache[lang] || {};
+    const reverse = new Map();
+    Object.keys(langCache).forEach(function (source) {
+      const translated = langCache[source];
+      if (typeof translated === "string" && translated && !reverse.has(translated)) {
+        reverse.set(translated, source);
+      }
+    });
+    reverseSourceLookupByLang[lang] = reverse;
+    return reverse;
+  }
+
+  function inferSourceCore(core) {
+    if (typeof core !== "string" || !core) return core;
+    if (/[\u4e00-\u9fff]/.test(core)) return core;
+
+    const currentReverse = getReverseSourceLookup(currentLanguage);
+    if (currentReverse.has(core)) return currentReverse.get(core);
+
+    const englishReverse = getReverseSourceLookup("en");
+    if (englishReverse.has(core)) return englishReverse.get(core);
+
+    return core;
   }
 
   async function ensurePrebuiltTranslateCacheLoaded() {
@@ -880,16 +910,29 @@
         }
 
         let sourceCore = contentTextSourceMap.get(node);
-        if (currentLanguage === "zh" || !sourceCore) {
-          sourceCore = core;
+        if (!sourceCore) {
+          sourceCore = inferSourceCore(core);
           contentTextSourceMap.set(node, sourceCore);
+        }
+
+        if (currentLanguage === "zh") {
+          if (/[\u4e00-\u9fff]/.test(core)) {
+            sourceCore = core;
+            contentTextSourceMap.set(node, sourceCore);
+          } else if (!/[\u4e00-\u9fff]/.test(sourceCore || "")) {
+            const recoveredSource = inferSourceCore(core);
+            if (recoveredSource && recoveredSource !== sourceCore) {
+              sourceCore = recoveredSource;
+              contentTextSourceMap.set(node, sourceCore);
+            }
+          }
         }
 
         entries.push({
           node: node,
           prefix: prefix,
           suffix: suffix,
-          source: sourceCore,
+          source: sourceCore || core,
         });
 
         node = walker.nextNode();
@@ -968,6 +1011,12 @@
 
   async function autoTranslateSiteContent() {
     const runId = ++autoTranslateRunId;
+
+    if (currentLanguage !== "zh" && AUTO_TRANSLATE_SUPPORTED.has(currentLanguage)) {
+      await ensurePrebuiltTranslateCacheLoaded();
+      if (runId !== autoTranslateRunId) return;
+    }
+
     const entries = collectContentTextNodes();
     entries.forEach(function (entry) {
       if (!entry || !entry.node || entry.node.nodeType !== Node.TEXT_NODE) return;
@@ -977,9 +1026,6 @@
     if (currentLanguage === "zh" || !AUTO_TRANSLATE_SUPPORTED.has(currentLanguage)) {
       return;
     }
-
-    await ensurePrebuiltTranslateCacheLoaded();
-    if (runId !== autoTranslateRunId) return;
 
     const cache = loadAutoTranslateCache();
     cache[currentLanguage] = cache[currentLanguage] || {};
