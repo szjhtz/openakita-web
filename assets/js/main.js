@@ -535,11 +535,33 @@
     return stripped || raw;
   }
 
+  function normalizeHomeHeroSubtitleLayout() {
+    const subline = document.querySelector("body[data-page='home'] .hero-title-subline");
+    const typed = document.getElementById("heroTypedTitle");
+    if (!subline || !typed) return;
+
+    const wraps = subline.querySelectorAll(".hero-typed-wrap");
+    wraps.forEach(function (wrap) {
+      const parent = wrap.parentElement;
+      if (!parent) return;
+      while (wrap.firstChild) {
+        parent.insertBefore(wrap.firstChild, wrap);
+      }
+      wrap.remove();
+    });
+
+    typed.style.fontSize = "";
+    typed.style.transform = "";
+  }
+
   function startHomeHeroTyping() {
     const target = document.getElementById("heroTypedTitle");
     if (!target) return;
 
+    normalizeHomeHeroSubtitleLayout();
     const text = getHomeHeroSubtitle(t("home.hero.title"), target.getAttribute("data-typed-title"));
+    target.setAttribute("data-typed-title", text);
+
     const reducedMotion =
       typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -558,15 +580,14 @@
       if (runId !== homeHeroTypingRun) return;
       cursor += 1;
       target.textContent = text.slice(0, cursor);
-
       if (cursor >= text.length) return;
 
       const typedChar = text.charAt(cursor - 1);
-      const delay = /[\s·,.;:!?，。！？：；、]/.test(typedChar) ? 85 : 48;
+      const delay = /[\s·,.;:!?，。！？：；、]/.test(typedChar) ? 180 : 95;
       window.setTimeout(typeNext, delay);
     }
 
-    window.setTimeout(typeNext, 240);
+    window.setTimeout(typeNext, 360);
   }
 
   function applyMeta(pageKey) {

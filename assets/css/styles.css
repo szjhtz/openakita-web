@@ -39,11 +39,12 @@ body {
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
   position: relative;
-  overflow-x: hidden;
+  overflow-x: clip;
   font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
   line-height: 1.65;
   color: var(--text);
@@ -379,12 +380,14 @@ body[data-page="home"] .hero-main {
 }
 
 body[data-page="home"] .hero .container {
-  width: min(1600px, calc(100% - 88px));
+  width: var(--container);
 }
 
 body[data-page="home"] .hero-title-typing {
   max-width: none;
-  display: inline-flex;
+  width: 100%;
+  max-width: min(1100px, 100%);
+  display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.2em;
@@ -403,6 +406,8 @@ body[data-page="home"] .hero-title-typing {
 .hero-title-line {
   display: block;
   line-height: 1.08;
+  width: 100%;
+  text-align: center;
 }
 
 .hero-title-brand {
@@ -412,8 +417,29 @@ body[data-page="home"] .hero-title-typing {
 
 .hero-title-subline {
   margin-top: 0.02em;
-  white-space: nowrap;
-  word-break: keep-all;
+  display: block;
+  text-align: center;
+  font-size: 0.78em;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding-inline: clamp(8px, 1vw, 16px);
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+  max-width: 100%;
+  line-height: 1.2;
+}
+
+#heroTypedTitle {
+  display: inline;
+  max-width: 100%;
+  white-space: inherit !important;
+  word-break: inherit !important;
+  overflow-wrap: inherit !important;
+  font-size: 1em;
+  line-height: inherit;
+  text-align: center;
 }
 
 .hero-slogan {
@@ -428,10 +454,10 @@ body[data-page="home"] .hero-title-typing {
 .typing-caret {
   display: inline-block;
   width: 1px;
-  height: 1.15em;
+  height: 1.05em;
+  margin-left: 4px;
+  vertical-align: -0.08em;
   background: var(--primary-strong);
-  margin-left: 6px;
-  vertical-align: -0.14em;
   animation: typingCaretBlink 0.9s steps(1, end) infinite;
 }
 
@@ -1913,7 +1939,7 @@ body[data-page="home"] .home-section .reveal.is-visible {
   }
 
   body[data-page="home"] .hero .container {
-    width: min(1600px, calc(100% - 24px));
+    width: var(--container);
   }
 
   body[data-page="home"] .hero-title-typing {
