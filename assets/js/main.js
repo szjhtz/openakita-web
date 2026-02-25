@@ -12,7 +12,7 @@
   const AUTO_TRANSLATE_SUPPORTED = new Set(["en", "ja", "ko", "ru", "fr", "de"]);
   const AUTO_TRANSLATE_CACHE_KEY = "openakita_auto_i18n_cache_v1";
   const AUTO_TRANSLATE_SEPARATOR = "[[[OPENAKITA_SEP]]]";
-  const PREBUILT_TRANSLATION_CACHE_URL = "/assets/i18n/prebuilt_cache.json";
+  const PREBUILT_TRANSLATION_CACHE_URL = "/assets/i18n/prebuilt_cache.json?v=20260225-setup-install-i18n";
   const AUTO_TRANSLATE_SKIP_IDS = new Set([
     "latestReleaseVersion",
     "latestReleaseDate",
