@@ -1,18 +1,18 @@
 {
   "version": "1.24.2",
-  "notes": "**Full Changelog**: https://github.com/openakita/openakita/compare/v1.24.1...v1.24.2",
+  "notes": "**Full Changelog**: https://github.com/openakita/openakita/compare/v1.24.1...v1.24.2\n\n**Full Changelog**: https://github.com/openakita/openakita/compare/v1.24.1...v1.24.2",
   "pub_date": "2026-02-24T18:34:20Z",
   "platforms": {},
   "downloads": {
     "windows": {
       "name": "OpenAkita.Desktop_1.24.2_x64-setup-core.exe",
       "url": "https://github.com/openakita/openakita/releases/download/v1.24.2/OpenAkita.Desktop_1.24.2_x64-setup-core.exe",
-      "size": 288217662
+      "size": 288349785
     },
     "linux-deb-ubuntu22-amd64": {
       "name": "OpenAkita.Desktop_1.24.2_amd64-ubuntu22-amd64.deb",
       "url": "https://github.com/openakita/openakita/releases/download/v1.24.2/OpenAkita.Desktop_1.24.2_amd64-ubuntu22-amd64.deb",
-      "size": 571964738
+      "size": 572004930
     },
     "linux-deb-ubuntu22-arm64": {
       "name": "OpenAkita.Desktop_1.24.2_arm64-ubuntu22-arm64.deb",
@@ -22,12 +22,12 @@
     "linux-deb-ubuntu24-amd64": {
       "name": "OpenAkita.Desktop_1.24.2_amd64-ubuntu24-amd64.deb",
       "url": "https://github.com/openakita/openakita/releases/download/v1.24.2/OpenAkita.Desktop_1.24.2_amd64-ubuntu24-amd64.deb",
-      "size": 633265664
+      "size": 633316362
     },
     "linux-deb-ubuntu24-arm64": {
       "name": "OpenAkita.Desktop_1.24.2_arm64-ubuntu24-arm64.deb",
       "url": "https://github.com/openakita/openakita/releases/download/v1.24.2/OpenAkita.Desktop_1.24.2_arm64-ubuntu24-arm64.deb",
-      "size": 382735230
+      "size": 382768622
     }
   }
 }
