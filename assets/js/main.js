@@ -12,7 +12,7 @@
   const AUTO_TRANSLATE_SUPPORTED = new Set(["en", "ja", "ko", "ru", "fr", "de"]);
   const AUTO_TRANSLATE_CACHE_KEY = "openakita_auto_i18n_cache_v1";
   const AUTO_TRANSLATE_SEPARATOR = "[[[OPENAKITA_SEP]]]";
-  const PREBUILT_TRANSLATION_CACHE_URL = "/assets/i18n/prebuilt_cache.json?v=20260225-setup-install-i18n";
+  const PREBUILT_TRANSLATION_CACHE_URL = "/assets/i18n/prebuilt_cache.json?v=20260225-i18n-all-lang";
   const AUTO_TRANSLATE_SKIP_IDS = new Set([
     "latestReleaseVersion",
     "latestReleaseDate",
@@ -773,7 +773,7 @@
     });
   }
 
-  let contentTextRegistry = null;
+  const contentTextSourceMap = new WeakMap();
   let autoTranslateCache = null;
   let autoTranslateRunId = 0;
   let prebuiltCacheMerged = false;
@@ -833,8 +833,10 @@
     const roots = [];
     const main = document.querySelector("main");
     const footer = document.querySelector(".site-footer");
+    const setupDrawer = document.querySelector("[data-setup-drawer]");
     if (main) roots.push(main);
     if (footer) roots.push(footer);
+    if (setupDrawer) roots.push(setupDrawer);
 
     const entries = [];
     const meaningfulPattern = /[\u4e00-\u9fffA-Za-z]/;
@@ -877,11 +879,17 @@
           continue;
         }
 
+        let sourceCore = contentTextSourceMap.get(node);
+        if (currentLanguage === "zh" || !sourceCore) {
+          sourceCore = core;
+          contentTextSourceMap.set(node, sourceCore);
+        }
+
         entries.push({
           node: node,
           prefix: prefix,
-          core: core,
           suffix: suffix,
+          source: sourceCore,
         });
 
         node = walker.nextNode();
@@ -891,18 +899,10 @@
     return entries;
   }
 
-  function restoreOriginalContentText() {
-    if (!contentTextRegistry) return;
-    contentTextRegistry.forEach(function (entry) {
-      if (!entry || !entry.node || entry.node.nodeType !== Node.TEXT_NODE) return;
-      entry.node.nodeValue = entry.prefix + entry.core + entry.suffix;
-    });
-  }
-
   async function requestGoogleTranslateBatch(texts, targetLanguage) {
     const query = encodeURIComponent(texts.join(AUTO_TRANSLATE_SEPARATOR));
     const url =
-      "https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=" +
+      "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" +
       encodeURIComponent(targetLanguage) +
       "&dt=t&q=" +
       query;
@@ -968,12 +968,11 @@
 
   async function autoTranslateSiteContent() {
     const runId = ++autoTranslateRunId;
-
-    if (!contentTextRegistry) {
-      contentTextRegistry = collectContentTextNodes();
-    }
-
-    restoreOriginalContentText();
+    const entries = collectContentTextNodes();
+    entries.forEach(function (entry) {
+      if (!entry || !entry.node || entry.node.nodeType !== Node.TEXT_NODE) return;
+      entry.node.nodeValue = entry.prefix + entry.source + entry.suffix;
+    });
 
     if (currentLanguage === "zh" || !AUTO_TRANSLATE_SUPPORTED.has(currentLanguage)) {
       return;
@@ -988,12 +987,12 @@
 
     const uniqueSources = Array.from(
       new Set(
-        contentTextRegistry
+        entries
           .map(function (entry) {
-            return entry && typeof entry.core === "string" ? entry.core : "";
+            return entry && typeof entry.source === "string" ? entry.source : "";
           })
           .filter(function (text) {
-            return text.trim().length > 0;
+            return text.trim().length > 0 && /[\u4e00-\u9fff]/.test(text);
           })
       )
     );
@@ -1013,9 +1012,10 @@
 
     if (runId !== autoTranslateRunId) return;
 
-    contentTextRegistry.forEach(function (entry) {
+    entries.forEach(function (entry) {
       if (!entry || !entry.node || entry.node.nodeType !== Node.TEXT_NODE) return;
-      const translatedCore = langCache[entry.core] || entry.core;
+      const englishCache = cache.en || {};
+      const translatedCore = langCache[entry.source] || englishCache[entry.source] || entry.source;
       entry.node.nodeValue = entry.prefix + translatedCore + entry.suffix;
     });
 
@@ -1078,8 +1078,6 @@
   const pageKey = resolvePageKey();
   currentLanguage = detectLanguage();
   document.documentElement.lang = LANG_TO_LOCALE[currentLanguage] || "en-US";
-  contentTextRegistry = collectContentTextNodes();
-
   applyMeta(pageKey);
   applyCommonTexts();
   applyPageTexts(pageKey);
@@ -1217,7 +1215,6 @@
       });
 
       enhanceCodeBlocks();
-      contentTextRegistry = collectContentTextNodes();
       void autoTranslateSiteContent();
       drawer.classList.add("is-open");
       backdrop.classList.add("is-open");
@@ -1468,6 +1465,10 @@
     var dateNode = document.getElementById("latestReleaseDate");
     if (versionNode && displayManifest) versionNode.textContent = "v" + displayManifest.version;
     if (dateNode && displayManifest) dateNode.textContent = displayManifest.pub_date ? formatDate(displayManifest.pub_date) : "--";
+
+    // Release data is async and may inject content after a language switch.
+    // Re-run auto translation to keep dynamic text in the selected locale.
+    void autoTranslateSiteContent();
   }
 
   loadLatestRelease();
