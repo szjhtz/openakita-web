@@ -1328,8 +1328,9 @@
     return null;
   }
 
-  function getAllPlatformLinks(downloads, os) {
+  function getAllPlatformLinks(downloads, os, includeCurrent) {
     if (!downloads) return [];
+    var showCurrent = Boolean(includeCurrent);
     var links = [];
     var order = [
       { key: "windows", label: "Windows (.exe)" },
@@ -1344,6 +1345,7 @@
         links.push({
           label: p.label + (size ? " " + size : ""),
           url: downloads[p.key].url,
+          includeCurrent: showCurrent,
           isCurrent: (os === "windows" && (p.key === "windows")) ||
                      (os === "macos" && p.key === "macos") ||
                      (os === "linux" && p.key === "linux-appimage"),
@@ -1396,8 +1398,9 @@
     if (versionEl) versionEl.textContent = "v" + data.version;
     if (dateEl) dateEl.textContent = data.pub_date ? formatDate(data.pub_date) : "";
 
+    var forceGithubPrimary = prefix === "stable";
     var osDownload = pickDownloadForOS(data.downloads, os);
-    if (primaryBtn && osDownload) {
+    if (primaryBtn && !forceGithubPrimary && osDownload) {
       primaryBtn.href = osDownload.url;
       var sizeStr = formatSize(osDownload.size);
       if (primaryOS) {
@@ -1414,9 +1417,9 @@
 
     if (platformsEl) {
       platformsEl.innerHTML = "";
-      var links = getAllPlatformLinks(data.downloads, os);
+      var links = getAllPlatformLinks(data.downloads, os, forceGithubPrimary);
       links.forEach(function(link) {
-        if (link.isCurrent) return;
+        if (link.isCurrent && !link.includeCurrent) return;
         var a = document.createElement("a");
         a.href = link.url;
         a.textContent = link.label;
