@@ -1,23 +1,23 @@
 {
   "version": "1.24.4",
-  "notes": "## What's Changed\n* Merge v1.24.x into main by @SimYng in https://github.com/openakita/openakita/pull/32\n* fix(memory): restructure _create_tables to prevent cross-table reference errors by @SimYng in https://github.com/openakita/openakita/pull/33\n* ci: stabilize macOS notarization in release workflow by @SimYng in https://github.com/openakita/openakita/pull/35\n* ci: fix notarization timeout handling in release workflow by @SimYng in https://github.com/openakita/openakita/pull/37\n* v1.24.3: fix inline comments in .env causing startup crash by @SimYng in https://github.com/openakita/openakita/pull/39\n* chore: bump version to 1.24.3 by @SimYng in https://github.com/openakita/openakita/pull/40\n* chore: sync all version files to 1.24.3 by @SimYng in https://github.com/openakita/openakita/pull/41\n* fix(test): remove stale tests for deprecated extract_quick_facts by @SimYng in https://github.com/openakita/openakita/pull/42\n* ci(dryrun): align release-dryrun.yml with release.yml by @SimYng in https://github.com/openakita/openakita/pull/43\n* fix(ci): resolve lint, test collection and assertion failures by @SimYng in https://github.com/openakita/openakita/pull/44\n* chore: merge v1.24.x into main with dual-arch macOS release fixes by @SimYng in https://github.com/openakita/openakita/pull/45\n* chore: merge v1.24.x into main with release CI hardening by @SimYng in https://github.com/openakita/openakita/pull/46\n* fix(chat): avoid misleading backend-offline network errors by @SimYng in https://github.com/openakita/openakita/pull/48\n* docs(readme): use gif for desktop quick setup preview by @SimYng in https://github.com/openakita/openakita/pull/49\n* fix(setup-center): localize memory label and refine onboarding checkbox visuals by @SimYng in https://github.com/openakita/openakita/pull/50\n* docs(assets): refresh desktop terminal screenshots by @SimYng in https://github.com/openakita/openakita/pull/51\n* docs(readme-cn): use gif quick setup preview by @SimYng in https://github.com/openakita/openakita/pull/52\n* docs(readme): remove badge underline artifacts in EN/CN by @SimYng in https://github.com/openakita/openakita/pull/53\n* merge: sync v1.24.x fixes into main by @SimYng in https://github.com/openakita/openakita/pull/54\n* fix(setup-center): prevent empty chat model list on startup by @SimYng in https://github.com/openakita/openakita/pull/55\n* fix(env): enforce project-owned Python and add China mirror fallback by @SimYng in https://github.com/openakita/openakita/pull/56\n\n## New Contributors\n* @SimYng made their first contribution in https://github.com/openakita/openakita/pull/32\n\n**Full Changelog**: https://github.com/openakita/openakita/compare/v1.24.2...v1.24.4",
+  "notes": "## What's Changed\r\n* Merge v1.24.x into main by @SimYng in https://github.com/openakita/openakita/pull/32\r\n* fix(memory): restructure _create_tables to prevent cross-table reference errors by @SimYng in https://github.com/openakita/openakita/pull/33\r\n* ci: stabilize macOS notarization in release workflow by @SimYng in https://github.com/openakita/openakita/pull/35\r\n* ci: fix notarization timeout handling in release workflow by @SimYng in https://github.com/openakita/openakita/pull/37\r\n* v1.24.3: fix inline comments in .env causing startup crash by @SimYng in https://github.com/openakita/openakita/pull/39\r\n* chore: bump version to 1.24.3 by @SimYng in https://github.com/openakita/openakita/pull/40\r\n* chore: sync all version files to 1.24.3 by @SimYng in https://github.com/openakita/openakita/pull/41\r\n* fix(test): remove stale tests for deprecated extract_quick_facts by @SimYng in https://github.com/openakita/openakita/pull/42\r\n* ci(dryrun): align release-dryrun.yml with release.yml by @SimYng in https://github.com/openakita/openakita/pull/43\r\n* fix(ci): resolve lint, test collection and assertion failures by @SimYng in https://github.com/openakita/openakita/pull/44\r\n* chore: merge v1.24.x into main with dual-arch macOS release fixes by @SimYng in https://github.com/openakita/openakita/pull/45\r\n* chore: merge v1.24.x into main with release CI hardening by @SimYng in https://github.com/openakita/openakita/pull/46\r\n* fix(chat): avoid misleading backend-offline network errors by @SimYng in https://github.com/openakita/openakita/pull/48\r\n* docs(readme): use gif for desktop quick setup preview by @SimYng in https://github.com/openakita/openakita/pull/49\r\n* fix(setup-center): localize memory label and refine onboarding checkbox visuals by @SimYng in https://github.com/openakita/openakita/pull/50\r\n* docs(assets): refresh desktop terminal screenshots by @SimYng in https://github.com/openakita/openakita/pull/51\r\n* docs(readme-cn): use gif quick setup preview by @SimYng in https://github.com/openakita/openakita/pull/52\r\n* docs(readme): remove badge underline artifacts in EN/CN by @SimYng in https://github.com/openakita/openakita/pull/53\r\n* merge: sync v1.24.x fixes into main by @SimYng in https://github.com/openakita/openakita/pull/54\r\n* fix(setup-center): prevent empty chat model list on startup by @SimYng in https://github.com/openakita/openakita/pull/55\r\n* fix(env): enforce project-owned Python and add China mirror fallback by @SimYng in https://github.com/openakita/openakita/pull/56\r\n\r\n## New Contributors\r\n* @SimYng made their first contribution in https://github.com/openakita/openakita/pull/32\r\n\r\n**Full Changelog**: https://github.com/openakita/openakita/compare/v1.24.2...v1.24.4\r\n\r\n**Full Changelog**: https://github.com/openakita/openakita/compare/v1.24.3...v1.24.4\r\n\r\n**Full Changelog**: https://github.com/openakita/openakita/compare/v1.24.3...v1.24.4",
   "pub_date": "2026-02-26T21:20:58Z",
   "platforms": {},
   "downloads": {
     "windows-core": {
-      "nickname": "Windows · 标准版",
+      "nickname": "Windows 10/11",
       "name": "OpenAkita.Desktop_1.24.3_x64-setup-core.exe",
       "url": "https://github.com/openakita/openakita/releases/download/v1.24.4/OpenAkita.Desktop_1.24.3_x64-setup-core.exe",
       "size": 210889565
     },
     "macos-arm64": {
-      "nickname": "macOS (Apple Silicon)",
+      "nickname": "macOS Apple Silicon (.dmg)",
       "name": "OpenAkita.Desktop_1.24.3_aarch64-macos-arm64.dmg",
       "url": "https://github.com/openakita/openakita/releases/download/v1.24.4/OpenAkita.Desktop_1.24.3_aarch64-macos-arm64.dmg",
       "size": 212543716
     },
     "macos-x64": {
-      "nickname": "macOS (Intel)",
+      "nickname": "macOS Intel (.dmg)",
       "name": "OpenAkita.Desktop_1.24.3_x64-macos-x64.dmg",
       "url": "https://github.com/openakita/openakita/releases/download/v1.24.4/OpenAkita.Desktop_1.24.3_x64-macos-x64.dmg",
       "size": 221966995
@@ -45,18 +45,6 @@
       "name": "OpenAkita.Desktop_1.24.3_arm64-ubuntu24-arm64.deb",
       "url": "https://github.com/openakita/openakita/releases/download/v1.24.4/OpenAkita.Desktop_1.24.3_arm64-ubuntu24-arm64.deb",
       "size": 271087582
-    },
-    "windows": {
-      "nickname": "Windows · 标准版",
-      "name": "OpenAkita.Desktop_1.24.3_x64-setup-core.exe",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.24.4/OpenAkita.Desktop_1.24.3_x64-setup-core.exe",
-      "size": 210889565
-    },
-    "macos": {
-      "nickname": "macOS (Apple Silicon)",
-      "name": "OpenAkita.Desktop_1.24.3_aarch64-macos-arm64.dmg",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.24.4/OpenAkita.Desktop_1.24.3_aarch64-macos-arm64.dmg",
-      "size": 212543716
     }
   }
 }
