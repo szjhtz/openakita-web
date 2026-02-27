@@ -1,62 +1,50 @@
 {
-  "version": "1.24.3",
-  "notes": "**Full Changelog**: https://github.com/openakita/openakita/compare/v1.24.2...v1.24.3\r\n\r\n**Full Changelog**: https://github.com/openakita/openakita/compare/v1.24.2...v1.24.3\r\n\r\n**Full Changelog**: https://github.com/openakita/openakita/compare/v1.24.2...v1.24.3\r\n\r\n**Full Changelog**: https://github.com/openakita/openakita/compare/v1.24.2...v1.24.3\r\n\r\n**Full Changelog**: https://github.com/openakita/openakita/compare/v1.24.2...v1.24.3\r\n\r\n**Full Changelog**: https://github.com/openakita/openakita/compare/v1.24.2...v1.24.3\r\n\r\n**Full Changelog**: https://github.com/openakita/openakita/compare/v1.24.2...v1.24.3\r\n\r\n**Full Changelog**: https://github.com/openakita/openakita/compare/v1.24.2...v1.24.3",
-  "pub_date": "2026-02-26T02:52:34Z",
+  "version": "1.24.5",
+  "notes": "Simplify config UI: replace step numbers with icons, remove wizard navigation buttons\n\n**Full Changelog**: https://github.com/openakita/openakita/compare/v1.24.4...v1.24.5",
+  "pub_date": "2026-02-27T10:38:20Z",
   "platforms": {},
   "downloads": {
     "windows-core": {
-      "nickname": "Windows · 标准版",
-      "name": "OpenAkita.Desktop_1.24.3_x64-setup-core.exe",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.24.3/OpenAkita.Desktop_1.24.3_x64-setup-core.exe",
-      "size": 210862153
+      "nickname": "Windows 10/11",
+      "name": "OpenAkita.Desktop_1.24.4_x64-setup-core.exe",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.24.5/OpenAkita.Desktop_1.24.4_x64-setup-core.exe",
+      "size": 232465374
     },
     "macos-arm64": {
-      "nickname": "macOS (Apple Silicon)",
-      "name": "OpenAkita.Desktop_1.24.3_aarch64-macos-arm64.dmg",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.24.3/OpenAkita.Desktop_1.24.3_aarch64-macos-arm64.dmg",
-      "size": 212544780
+      "nickname": "macOS Apple Silicon (.dmg)",
+      "name": "OpenAkita.Desktop_1.24.4_aarch64-macos-arm64.dmg",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.24.5/OpenAkita.Desktop_1.24.4_aarch64-macos-arm64.dmg",
+      "size": 244806104
     },
     "macos-x64": {
-      "nickname": "macOS (Intel)",
-      "name": "OpenAkita.Desktop_1.24.3_x64-macos-x64.dmg",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.24.3/OpenAkita.Desktop_1.24.3_x64-macos-x64.dmg",
-      "size": 222013481
+      "nickname": "macOS Intel (.dmg)",
+      "name": "OpenAkita.Desktop_1.24.4_x64-macos-x64.dmg",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.24.5/OpenAkita.Desktop_1.24.4_x64-macos-x64.dmg",
+      "size": 254926807
     },
     "linux-deb-ubuntu22-amd64": {
       "nickname": "Ubuntu 22 x64 (.deb)",
-      "name": "OpenAkita.Desktop_1.24.3_amd64-ubuntu22-amd64.deb",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.24.3/OpenAkita.Desktop_1.24.3_amd64-ubuntu22-amd64.deb",
-      "size": 268762574
+      "name": "OpenAkita.Desktop_1.24.4_amd64-ubuntu22-amd64.deb",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.24.5/OpenAkita.Desktop_1.24.4_amd64-ubuntu22-amd64.deb",
+      "size": 292164458
     },
     "linux-deb-ubuntu22-arm64": {
       "nickname": "Ubuntu 22 ARM64 (.deb)",
-      "name": "OpenAkita.Desktop_1.24.3_arm64-ubuntu22-arm64.deb",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.24.3/OpenAkita.Desktop_1.24.3_arm64-ubuntu22-arm64.deb",
-      "size": 354307296
+      "name": "OpenAkita.Desktop_1.24.4_arm64-ubuntu22-arm64.deb",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.24.5/OpenAkita.Desktop_1.24.4_arm64-ubuntu22-arm64.deb",
+      "size": 377567348
     },
     "linux-deb-ubuntu24-amd64": {
       "nickname": "Ubuntu 24 x64 (.deb)",
-      "name": "OpenAkita.Desktop_1.24.3_amd64-ubuntu24-amd64.deb",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.24.3/OpenAkita.Desktop_1.24.3_amd64-ubuntu24-amd64.deb",
-      "size": 330054652
+      "name": "OpenAkita.Desktop_1.24.4_amd64-ubuntu24-amd64.deb",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.24.5/OpenAkita.Desktop_1.24.4_amd64-ubuntu24-amd64.deb",
+      "size": 353428268
     },
     "linux-deb-ubuntu24-arm64": {
       "nickname": "Ubuntu 24 ARM64 (.deb)",
-      "name": "OpenAkita.Desktop_1.24.3_arm64-ubuntu24-arm64.deb",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.24.3/OpenAkita.Desktop_1.24.3_arm64-ubuntu24-arm64.deb",
-      "size": 271105698
-    },
-    "windows": {
-      "nickname": "Windows · 标准版",
-      "name": "OpenAkita.Desktop_1.24.3_x64-setup-core.exe",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.24.3/OpenAkita.Desktop_1.24.3_x64-setup-core.exe",
-      "size": 210862153
-    },
-    "macos": {
-      "nickname": "macOS (Apple Silicon)",
-      "name": "OpenAkita.Desktop_1.24.3_aarch64-macos-arm64.dmg",
-      "url": "https://github.com/openakita/openakita/releases/download/v1.24.3/OpenAkita.Desktop_1.24.3_aarch64-macos-arm64.dmg",
-      "size": 212544780
+      "name": "OpenAkita.Desktop_1.24.4_arm64-ubuntu24-arm64.deb",
+      "url": "https://github.com/openakita/openakita/releases/download/v1.24.5/OpenAkita.Desktop_1.24.4_arm64-ubuntu24-arm64.deb",
+      "size": 294366604
     }
   }
 }
