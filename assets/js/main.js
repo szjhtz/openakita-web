@@ -1358,36 +1358,62 @@
   }
 
   function pickDownloadForOS(downloads, os) {
-    if (!downloads || !os) return null;
-    if (os === "windows") return downloads["windows"] || null;
-    if (os === "macos") return downloads["macos"] || null;
-    if (os === "linux") return downloads["linux-appimage"] || downloads["linux-deb"] || null;
-    return null;
+    if (!downloads || !os || typeof downloads !== "object") return null;
+    var entries = Object.entries(downloads).filter(function(entry) {
+      var item = entry[1];
+      return item && typeof item.url === "string" && item.url;
+    });
+    if (!entries.length) return null;
+
+    function matchOS(key, item, targetOS) {
+      var haystack = (key + " " + (item.name || "") + " " + (item.url || "")).toLowerCase();
+      if (targetOS === "windows") {
+        return /windows|win32|win64|\.exe$|\.msi$/.test(haystack);
+      }
+      if (targetOS === "macos") {
+        return /mac|macos|darwin|osx|\.dmg$|\.pkg$/.test(haystack);
+      }
+      if (targetOS === "linux") {
+        return /linux|ubuntu|debian|appimage|\.appimage$|\.deb$|\.rpm$|\.tar\.gz$/.test(haystack);
+      }
+      return false;
+    }
+
+    var matched = entries.find(function(entry) {
+      return matchOS(entry[0], entry[1], os);
+    });
+    return matched ? matched[1] : entries[0][1];
+  }
+
+  function isCurrentOSDownload(key, item, os) {
+    if (!os || !item) return false;
+    var haystack = (key + " " + (item.name || "") + " " + (item.url || "")).toLowerCase();
+    if (os === "windows") return /windows|win32|win64|\.exe$|\.msi$/.test(haystack);
+    if (os === "macos") return /mac|macos|darwin|osx|\.dmg$|\.pkg$/.test(haystack);
+    if (os === "linux") return /linux|ubuntu|debian|appimage|\.appimage$|\.deb$|\.rpm$|\.tar\.gz$/.test(haystack);
+    return false;
+  }
+
+  function normalizeDownloadLabel(key, item) {
+    var base = (item && (item.nickname || item.name)) ? (item.nickname || item.name) : key;
+    return String(base || "").replace(/_/g, " ");
   }
 
   function getAllPlatformLinks(downloads, os, includeCurrent) {
-    if (!downloads) return [];
+    if (!downloads || typeof downloads !== "object") return [];
     var showCurrent = Boolean(includeCurrent);
     var links = [];
-    var order = [
-      { key: "windows", label: "Windows (.exe)" },
-      { key: "windows-full", label: "Windows \u5b8c\u6574\u7248 (.exe)" },
-      { key: "macos", label: "macOS (.dmg)" },
-      { key: "linux-appimage", label: "Linux (.AppImage)" },
-      { key: "linux-deb", label: "Linux (.deb)" },
-    ];
-    order.forEach(function(p) {
-      if (downloads[p.key]) {
-        var size = formatSize(downloads[p.key].size);
-        links.push({
-          label: p.label + (size ? " " + size : ""),
-          url: downloads[p.key].url,
-          includeCurrent: showCurrent,
-          isCurrent: (os === "windows" && (p.key === "windows")) ||
-                     (os === "macos" && p.key === "macos") ||
-                     (os === "linux" && p.key === "linux-appimage"),
-        });
-      }
+    Object.entries(downloads).forEach(function(entry) {
+      var key = entry[0];
+      var item = entry[1];
+      if (!item || typeof item.url !== "string" || !item.url) return;
+      var size = formatSize(item.size);
+      links.push({
+        label: normalizeDownloadLabel(key, item) + (size ? " " + size : ""),
+        url: item.url,
+        includeCurrent: showCurrent,
+        isCurrent: isCurrentOSDownload(key, item, os),
+      });
     });
     return links;
   }
@@ -1435,7 +1461,8 @@
     if (versionEl) versionEl.textContent = "v" + data.version;
     if (dateEl) dateEl.textContent = data.pub_date ? formatDate(data.pub_date) : "";
 
-    var forceGithubPrimary = prefix === "stable";
+    // Keep both channels consistent: primary CTA goes to GitHub release page.
+    var forceGithubPrimary = prefix === "stable" || prefix === "dev";
     var osDownload = pickDownloadForOS(data.downloads, os);
     if (primaryBtn && !forceGithubPrimary && osDownload) {
       primaryBtn.href = osDownload.url;
@@ -1497,16 +1524,17 @@
 
     var os = detectOS();
 
-    // Fetch both manifests in parallel
+    // Fetch both manifests from OSS (primary) with local fallback
+    var OSS_BASE = "https://dl-cn.openakita.ai";
     var results = await Promise.allSettled([
-      fetchManifest("/api/latest-dev.json"),
-      fetchManifest("/api/latest.json"),
+      fetchManifest(OSS_BASE + "/api/pre-release.json"),
+      fetchManifest(OSS_BASE + "/api/release.json"),
     ]);
 
     var devManifest = results[0].status === "fulfilled" ? results[0].value : null;
     var stableManifest = results[1].status === "fulfilled" ? results[1].value : null;
 
-    // dev: latest-dev.json, fallback to GitHub API (latest release including pre-release)
+    // pre-release: pre-release.json from OSS, fallback to GitHub API
     if (!devManifest || !devManifest.version || !devManifest.downloads || Object.keys(devManifest.downloads).length === 0) {
       var ghDev = await fetchGHRelease(true);
       if (ghDev) {
@@ -1520,7 +1548,7 @@
       }
     }
 
-    // stable: latest.json, fallback to GitHub API (latest non-prerelease)
+    // release: release.json from OSS, fallback to GitHub API (latest non-prerelease)
     if (!stableManifest || !stableManifest.version || !stableManifest.downloads || Object.keys(stableManifest.downloads).length === 0) {
       var ghStable = await fetchGHRelease(false);
       if (ghStable && !ghStable.prerelease) {
