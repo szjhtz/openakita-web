@@ -1421,26 +1421,33 @@
   function buildDownloadURLsFromGH(version, assets) {
     var downloads = {};
     if (!Array.isArray(assets)) return downloads;
-    var patterns = {
-      "windows": [/setup-core\.exe$/i, /\.exe$/i],
-      "windows-full": [/setup-full\.exe$/i],
-      "macos": [/\.dmg$/i],
-      "linux-appimage": [/\.appimage$/i],
-      "linux-deb": [/\.deb$/i],
-    };
-    Object.keys(patterns).forEach(function(key) {
-      patterns[key].some(function(re) {
-        var found = assets.find(function(a) { return re.test(a.name || ""); });
-        if (found) {
-          downloads[key] = {
-            name: found.name,
-            url: found.browser_download_url,
-            size: found.size || 0,
-          };
-          return true;
-        }
-        return false;
+    var patterns = [
+      { key: "windows-core",            ext: /\.exe$/i, include: /core/i,        exclude: /full|uninstall/i, nickname: "Windows 10/11" },
+      { key: "windows-full",            ext: /\.exe$/i, include: /full/i,        exclude: /core|uninstall/i, nickname: "Windows 10/11 \u5b8c\u6574\u7248" },
+      { key: "macos-arm64",             ext: /\.dmg$/i, include: /arm64|aarch64/i, exclude: null,           nickname: "macOS Apple Silicon (.dmg)" },
+      { key: "macos-x64",              ext: /\.dmg$/i, include: /x64|x86_64|intel/i, exclude: null,        nickname: "macOS Intel (.dmg)" },
+      { key: "linux-deb-ubuntu22-amd64", ext: /\.deb$/i, include: /ubuntu22-amd64|ubuntu22.*amd64/i, exclude: null, nickname: "Ubuntu 22 x64 (.deb)" },
+      { key: "linux-deb-ubuntu22-arm64", ext: /\.deb$/i, include: /ubuntu22-arm64|ubuntu22.*arm64/i, exclude: null, nickname: "Ubuntu 22 ARM64 (.deb)" },
+      { key: "linux-deb-ubuntu24-amd64", ext: /\.deb$/i, include: /ubuntu24-amd64|ubuntu24.*amd64/i, exclude: null, nickname: "Ubuntu 24 x64 (.deb)" },
+      { key: "linux-deb-ubuntu24-arm64", ext: /\.deb$/i, include: /ubuntu24-arm64|ubuntu24.*arm64/i, exclude: null, nickname: "Ubuntu 24 ARM64 (.deb)" },
+      { key: "linux-appimage-x64",      ext: /\.appimage$/i, include: null,      exclude: /arm64|aarch64/i, nickname: "Linux AppImage x64" },
+    ];
+    patterns.forEach(function(p) {
+      var found = assets.find(function(a) {
+        var name = a.name || "";
+        if (!p.ext.test(name)) return false;
+        if (p.include && !p.include.test(name)) return false;
+        if (p.exclude && p.exclude.test(name)) return false;
+        return true;
       });
+      if (found) {
+        downloads[p.key] = {
+          nickname: p.nickname,
+          name: found.name,
+          url: found.browser_download_url,
+          size: found.size || 0,
+        };
+      }
     });
     return downloads;
   }
