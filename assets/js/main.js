@@ -1531,22 +1531,38 @@
 
     var os = detectOS();
 
-    // Fetch both manifests from OSS (primary) with local fallback
+    // Fetch both manifests from OSS, fallback to GitHub API
     var OSS_BASE = "https://dl-openakita.fzstack.com";
     var results = await Promise.allSettled([
-      fetchManifest(OSS_BASE + "/api/pre-release.json"),
       fetchManifest(OSS_BASE + "/api/release.json"),
+      fetchManifest(OSS_BASE + "/api/pre-release.json"),
     ]);
 
-    var devManifest = results[0].status === "fulfilled" ? results[0].value : null;
-    var stableManifest = results[1].status === "fulfilled" ? results[1].value : null;
+    // devDownloadSection = 稳定版 (release.json, primary)
+    // stableDownloadSection = 预览版 (pre-release.json, secondary)
+    var releaseManifest = results[0].status === "fulfilled" ? results[0].value : null;
+    var preReleaseManifest = results[1].status === "fulfilled" ? results[1].value : null;
 
-    // pre-release: pre-release.json from OSS, fallback to GitHub API
-    if (!devManifest || !devManifest.version || !devManifest.downloads || Object.keys(devManifest.downloads).length === 0) {
+    // 稳定版: release.json from OSS, fallback to GitHub API (latest non-prerelease)
+    if (!releaseManifest || !releaseManifest.version || !releaseManifest.downloads || Object.keys(releaseManifest.downloads).length === 0) {
+      var ghStable = await fetchGHRelease(false);
+      if (ghStable && !ghStable.prerelease) {
+        var stableDownloads = buildDownloadURLsFromGH(ghStable.tag_name, ghStable.assets || []);
+        releaseManifest = {
+          version: (ghStable.tag_name || "").replace(/^v/, ""),
+          pub_date: ghStable.published_at || "",
+          notes: ghStable.body || "",
+          downloads: stableDownloads,
+        };
+      }
+    }
+
+    // 预览版: pre-release.json from OSS, fallback to GitHub API (latest release including pre-release)
+    if (!preReleaseManifest || !preReleaseManifest.version || !preReleaseManifest.downloads || Object.keys(preReleaseManifest.downloads).length === 0) {
       var ghDev = await fetchGHRelease(true);
       if (ghDev) {
         var devDownloads = buildDownloadURLsFromGH(ghDev.tag_name, ghDev.assets || []);
-        devManifest = {
+        preReleaseManifest = {
           version: (ghDev.tag_name || "").replace(/^v/, ""),
           pub_date: ghDev.published_at || "",
           notes: ghDev.body || "",
@@ -1555,33 +1571,17 @@
       }
     }
 
-    // release: release.json from OSS, fallback to GitHub API (latest non-prerelease)
-    if (!stableManifest || !stableManifest.version || !stableManifest.downloads || Object.keys(stableManifest.downloads).length === 0) {
-      var ghStable = await fetchGHRelease(false);
-      if (ghStable && !ghStable.prerelease) {
-        var stableDownloads = buildDownloadURLsFromGH(ghStable.tag_name, ghStable.assets || []);
-        stableManifest = {
-          version: (ghStable.tag_name || "").replace(/^v/, ""),
-          pub_date: ghStable.published_at || "",
-          notes: ghStable.body || "",
-          downloads: stableDownloads,
-        };
-      } else {
-        stableManifest = null;
-      }
+    // If versions are the same, hide the pre-release section
+    if (releaseManifest && preReleaseManifest && releaseManifest.version === preReleaseManifest.version) {
+      preReleaseManifest = null;
     }
 
-    // If versions are the same, only show one
-    if (devManifest && stableManifest && devManifest.version === stableManifest.version) {
-      stableManifest = null;
-    }
-
-    // Render channels
-    renderChannel("dev", devManifest, os);
-    renderChannel("stable", stableManifest, os);
+    // Render: "dev" DOM section = 稳定版, "stable" DOM section = 预览版
+    renderChannel("dev", releaseManifest, os);
+    renderChannel("stable", preReleaseManifest, os);
 
     // Update legacy elements (home page hero version badge etc.)
-    var displayManifest = devManifest || stableManifest;
+    var displayManifest = releaseManifest || preReleaseManifest;
     var versionNode = document.getElementById("latestReleaseVersion");
     var dateNode = document.getElementById("latestReleaseDate");
     if (versionNode && displayManifest) versionNode.textContent = "v" + displayManifest.version;
