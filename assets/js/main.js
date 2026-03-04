@@ -1532,7 +1532,7 @@
     var os = detectOS();
 
     // Fetch both manifests from OSS (primary) with local fallback
-    var OSS_BASE = "https://dl-cn.openakita.ai";
+    var OSS_BASE = "https://download.openakita.fzstack.com";
     var results = await Promise.allSettled([
       fetchManifest(OSS_BASE + "/api/pre-release.json"),
       fetchManifest(OSS_BASE + "/api/release.json"),
