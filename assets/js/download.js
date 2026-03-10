@@ -489,15 +489,29 @@
         alert("v" + version + " 暂无更新日志");
         return;
       }
-      var section = document.getElementById("releaseNotesSection");
-      var titleEl = document.getElementById("releaseNotesTitle");
-      var contentEl = document.getElementById("releaseNotesContent");
-      if (!section || !contentEl) return;
-      section.style.display = "";
+      var overlay = document.getElementById("notesModalOverlay");
+      var titleEl = document.getElementById("notesModalTitle");
+      var bodyEl = document.getElementById("notesModalBody");
+      if (!overlay || !bodyEl) return;
       if (titleEl) titleEl.textContent = "v" + version + " 更新日志";
-      contentEl.innerHTML = renderMarkdown(manifest.notes);
-      section.scrollIntoView({ behavior: "smooth", block: "start" });
+      bodyEl.innerHTML = renderMarkdown(manifest.notes);
+      overlay.style.display = "";
     });
+  }
+
+  function initNotesModal() {
+    var overlay = document.getElementById("notesModalOverlay");
+    var closeBtn = document.getElementById("notesModalClose");
+    if (overlay) {
+      overlay.addEventListener("click", function (e) {
+        if (e.target === overlay) overlay.style.display = "none";
+      });
+    }
+    if (closeBtn) {
+      closeBtn.addEventListener("click", function () {
+        document.getElementById("notesModalOverlay").style.display = "none";
+      });
+    }
   }
 
   // ── Initialization ──
@@ -505,6 +519,7 @@
     initTabs();
     initPlatformSelector();
     initArchOverlay();
+    initNotesModal();
     initChannelHover();
     initHistory();
 

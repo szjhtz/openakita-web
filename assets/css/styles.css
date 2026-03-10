@@ -2302,6 +2302,84 @@ body[data-page="home"] .home-section .reveal.is-visible {
   text-align: right;
 }
 
+/* ── Notes modal (history changelog popup) ── */
+.notes-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.notes-modal-panel {
+  background: #fff;
+  border-radius: var(--radius-lg, 14px);
+  width: 100%;
+  max-width: 680px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+}
+.notes-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 12px;
+  border-bottom: 1px solid var(--border, #e0e0e0);
+  flex-shrink: 0;
+}
+.notes-modal-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+.notes-modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--text-muted, #888);
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+.notes-modal-close:hover {
+  color: var(--text, #1a1a1a);
+}
+.notes-modal-body {
+  padding: 16px 24px 24px;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text, #1a1a1a);
+}
+.notes-modal-body h1,
+.notes-modal-body h2,
+.notes-modal-body h3 {
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+.notes-modal-body h2 { font-size: 16px; }
+.notes-modal-body h3 { font-size: 15px; }
+.notes-modal-body ul {
+  padding-left: 20px;
+}
+.notes-modal-body li {
+  margin-bottom: 4px;
+}
+.notes-modal-body code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.06);
+}
+.notes-modal-body a {
+  color: var(--primary, #0f6fcc);
+}
+
 /* ── Release notes ── */
 .release-notes-section {
   margin-bottom: 32px;
