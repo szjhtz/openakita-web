@@ -288,27 +288,61 @@
   }
 
   // ── Arch Detail Overlay ──
-  function showArchDetail(channel, manifest, platform) {
+  function showArchDetail(channel, manifest, platform, enablePlatformSwitch) {
     var overlay = document.getElementById("archDetailOverlay");
     var body = document.getElementById("archDetailBody");
     var title = document.getElementById("archDetailTitle");
     if (!overlay || !body) return;
 
-    var items = (manifest.downloads || {})[platform] || [];
     var channelLabel = { release: "稳定版", "pre-release": "抢先版", dev: "开发版" }[channel] || channel;
-    title.textContent = channelLabel + " v" + manifest.version + " — " + platformLabel(platform);
 
-    var html = '<div class="arch-list">';
-    items.forEach(function (item) {
-      var sizeStr = formatSize(item.size);
-      html += '<a class="arch-item" href="' + escapeHtml(item.url) + '">' +
-        '<span class="arch-name">' + escapeHtml(item.nickname) + '</span>' +
-        '<span class="arch-file">' + escapeHtml(item.name) + '</span>' +
-        (sizeStr ? '<span class="arch-size">' + sizeStr + '</span>' : '') +
-        '</a>';
-    });
-    html += '</div>';
-    body.innerHTML = html;
+    function renderForPlatform(p) {
+      title.textContent = channelLabel + " v" + manifest.version + " — " + platformLabel(p);
+
+      var html = "";
+
+      if (enablePlatformSwitch) {
+        var available = Object.keys(manifest.downloads || {}).filter(function (k) {
+          return (manifest.downloads[k] || []).length > 0;
+        });
+        if (available.length > 1) {
+          html += '<div class="arch-platform-tabs">';
+          available.forEach(function (k) {
+            var cls = k === p ? "arch-platform-tab active" : "arch-platform-tab";
+            html += '<button class="' + cls + '" data-platform="' + escapeHtml(k) + '">' +
+              escapeHtml(platformLabel(k)) + '</button>';
+          });
+          html += '</div>';
+        }
+      }
+
+      var items = (manifest.downloads || {})[p] || [];
+      html += '<div class="arch-list">';
+      if (items.length === 0) {
+        html += '<p class="arch-empty">该版本暂无 ' + escapeHtml(platformLabel(p)) + ' 安装包</p>';
+      } else {
+        items.forEach(function (item) {
+          var sizeStr = formatSize(item.size);
+          html += '<a class="arch-item" href="' + escapeHtml(item.url) + '">' +
+            '<span class="arch-name">' + escapeHtml(item.nickname) + '</span>' +
+            (sizeStr ? '<span class="arch-size">' + sizeStr + '</span>' : '') +
+            '<span class="arch-file">' + escapeHtml(item.name) + '</span>' +
+            '</a>';
+        });
+      }
+      html += '</div>';
+      body.innerHTML = html;
+
+      if (enablePlatformSwitch) {
+        body.querySelectorAll(".arch-platform-tab").forEach(function (tab) {
+          tab.addEventListener("click", function () {
+            renderForPlatform(tab.getAttribute("data-platform"));
+          });
+        });
+      }
+    }
+
+    renderForPlatform(platform);
     overlay.style.display = "";
   }
 
@@ -473,13 +507,21 @@
         alert("v" + version + " 暂无下载数据");
         return;
       }
-      var platform = state.platform;
-      var items = (manifest.downloads || {})[platform] || [];
-      if (items.length === 0) {
-        alert("v" + version + " 暂无 " + platformLabel(platform) + " 安装包");
+      var downloads = manifest.downloads || {};
+      var hasAny = Object.keys(downloads).some(function (k) {
+        return downloads[k] && downloads[k].length > 0;
+      });
+      if (!hasAny) {
+        alert("v" + version + " 暂无任何平台安装包");
         return;
       }
-      showArchDetail(manifest.channel || "release", manifest, platform);
+      var platform = state.platform;
+      if (!downloads[platform] || downloads[platform].length === 0) {
+        platform = Object.keys(downloads).find(function (k) {
+          return downloads[k] && downloads[k].length > 0;
+        }) || state.platform;
+      }
+      showArchDetail(manifest.channel || "release", manifest, platform, true);
     });
   }
 
