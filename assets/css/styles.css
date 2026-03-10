@@ -2488,8 +2488,18 @@ body[data-page="home"] .home-section .reveal.is-visible {
   border-radius: 20px;
   letter-spacing: 0.02em;
   white-space: nowrap;
+}
+.history-channel-tag.badge-release {
+  background: linear-gradient(135deg, #1976d2, #2196f3);
   color: #fff;
-  background: var(--bg-muted, #f0f0f0);
+}
+.history-channel-tag.badge-prerelease {
+  background: linear-gradient(135deg, #e65100, #ff9800);
+  color: #fff;
+}
+.history-channel-tag.badge-dev {
+  background: linear-gradient(135deg, #6a1b9a, #ab47bc);
+  color: #fff;
 }
 .history-date {
   font-size: 13px;
