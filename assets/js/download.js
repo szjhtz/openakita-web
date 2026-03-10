@@ -77,7 +77,7 @@
     var assets = release.assets;
     var downloads = {};
     var patterns = [
-      { platform: "windows", key: "windows-x64", ext: /\.exe$/i, inc: /core/i, exc: /full|uninstall/i, nick: "Windows 10/11" },
+      { platform: "windows", key: "windows-x64", ext: /\.exe$/i, inc: /core/i, exc: /full|uninstall/i, nick: "Windows 10/11 x64" },
       { platform: "macos", key: "macos-arm64", ext: /\.dmg$/i, inc: /arm64|aarch64/i, exc: null, nick: "macOS Apple Silicon (.dmg)" },
       { platform: "macos", key: "macos-x64", ext: /\.dmg$/i, inc: /x64|x86_64|intel/i, exc: null, nick: "macOS Intel (.dmg)" },
       { platform: "linux", key: "linux-deb-ubuntu24-amd64", ext: /\.deb$/i, inc: /ubuntu24-amd64/i, exc: null, nick: "Ubuntu 24 x64 (.deb)" },
