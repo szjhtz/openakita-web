@@ -20,6 +20,7 @@
     versionsIndex: null,  // versions.json content
     versionCache: {},     // { "v1.25.9": manifest }
     historyLoaded: false,
+    activeNotesChannel: "release",
   };
 
   // ── Platform Detection ──
@@ -260,6 +261,32 @@
         allArchEl.style.display = "none";
       }
     }
+
+    // Highlight the card whose notes are currently shown
+    if (card) {
+      card.classList.toggle("channel-card-active", channel === state.activeNotesChannel);
+    }
+
+    // "Release notes" link
+    var notesLink = card ? card.querySelector(".channel-card-notes-link") : null;
+    if (!notesLink && card && manifest.notes) {
+      notesLink = document.createElement("a");
+      notesLink.className = "channel-card-notes-link";
+      notesLink.href = "#releaseNotesSection";
+      card.appendChild(notesLink);
+    }
+    if (notesLink) {
+      if (manifest.notes) {
+        notesLink.style.display = "";
+        notesLink.textContent = channel === state.activeNotesChannel ? "▾ 当前更新日志" : "查看更新日志";
+        notesLink.onclick = function (e) {
+          e.preventDefault();
+          switchNotesChannel(channel);
+        };
+      } else {
+        notesLink.style.display = "none";
+      }
+    }
   }
 
   function renderAllChannels() {
@@ -314,20 +341,48 @@
   }
 
   // ── Release Notes ──
+  function switchNotesChannel(channel) {
+    state.activeNotesChannel = channel;
+    renderReleaseNotes();
+    // Update card highlights and link text
+    document.querySelectorAll(".channel-card").forEach(function (card) {
+      var ch = card.getAttribute("data-channel");
+      card.classList.toggle("channel-card-active", ch === channel);
+      var link = card.querySelector(".channel-card-notes-link");
+      if (link) link.textContent = ch === channel ? "▾ 当前更新日志" : "查看更新日志";
+    });
+    var section = document.getElementById("releaseNotesSection");
+    if (section && section.style.display !== "none") {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
   function renderReleaseNotes() {
     var section = document.getElementById("releaseNotesSection");
     var titleEl = document.getElementById("releaseNotesTitle");
     var contentEl = document.getElementById("releaseNotesContent");
     if (!section || !contentEl) return;
 
-    var manifest = state.manifests.release || state.manifests["pre-release"] || state.manifests.dev;
+    var channelLabel = { release: "稳定版", "pre-release": "抢先版", dev: "开发版" };
+    var manifest = state.manifests[state.activeNotesChannel];
+    // Fallback: if active channel has no notes, try others
+    if (!manifest || !manifest.notes) {
+      var fallback = CHANNELS.find(function (ch) {
+        var m = state.manifests[ch];
+        return m && m.notes;
+      });
+      manifest = fallback ? state.manifests[fallback] : null;
+      if (fallback) state.activeNotesChannel = fallback;
+    }
+
     if (!manifest || !manifest.notes) {
       section.style.display = "none";
       return;
     }
 
+    var label = channelLabel[state.activeNotesChannel] || state.activeNotesChannel;
     section.style.display = "";
-    if (titleEl) titleEl.textContent = "v" + manifest.version + " 更新日志";
+    if (titleEl) titleEl.textContent = label + " v" + manifest.version + " 更新日志";
     contentEl.innerHTML = renderMarkdown(manifest.notes);
   }
 
@@ -504,6 +559,12 @@
       });
 
       state.manifests = manifests;
+      // Set initial active notes channel to first channel with notes
+      var initialNotes = CHANNELS.find(function (ch) {
+        var m = manifests[ch];
+        return m && m.notes;
+      });
+      if (initialNotes) state.activeNotesChannel = initialNotes;
       renderAllChannels();
 
       // Cache manifests in version cache for history
