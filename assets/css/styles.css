@@ -2200,19 +2200,6 @@ body[data-page="home"] .home-section .reveal.is-visible {
 .channel-card-all-arch:hover {
   text-decoration: underline;
 }
-.channel-card-notes-link {
-  display: block;
-  margin-top: 10px;
-  font-size: 12px;
-  color: var(--primary, #0f6fcc);
-  text-decoration: none;
-  cursor: pointer;
-  text-align: center;
-  transition: color 0.15s;
-}
-.channel-card-notes-link:hover {
-  text-decoration: underline;
-}
 .channel-card-active {
   outline: 2px solid var(--primary, #0f6fcc);
   outline-offset: -2px;

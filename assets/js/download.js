@@ -262,30 +262,8 @@
       }
     }
 
-    // Highlight the card whose notes are currently shown
     if (card) {
       card.classList.toggle("channel-card-active", channel === state.activeNotesChannel);
-    }
-
-    // "Release notes" link
-    var notesLink = card ? card.querySelector(".channel-card-notes-link") : null;
-    if (!notesLink && card && manifest.notes) {
-      notesLink = document.createElement("a");
-      notesLink.className = "channel-card-notes-link";
-      notesLink.href = "#releaseNotesSection";
-      card.appendChild(notesLink);
-    }
-    if (notesLink) {
-      if (manifest.notes) {
-        notesLink.style.display = "";
-        notesLink.textContent = channel === state.activeNotesChannel ? "▾ 当前更新日志" : "查看更新日志";
-        notesLink.onclick = function (e) {
-          e.preventDefault();
-          switchNotesChannel(channel);
-        };
-      } else {
-        notesLink.style.display = "none";
-      }
     }
   }
 
@@ -294,6 +272,19 @@
       renderChannelCard(ch, state.manifests[ch]);
     });
     renderReleaseNotes();
+  }
+
+  // ── Channel card hover → switch release notes ──
+  function initChannelHover() {
+    document.querySelectorAll(".channel-card").forEach(function (card) {
+      card.addEventListener("mouseenter", function () {
+        var ch = card.getAttribute("data-channel");
+        var m = state.manifests[ch];
+        if (m && m.notes) {
+          switchNotesChannel(ch);
+        }
+      });
+    });
   }
 
   // ── Arch Detail Overlay ──
@@ -344,17 +335,10 @@
   function switchNotesChannel(channel) {
     state.activeNotesChannel = channel;
     renderReleaseNotes();
-    // Update card highlights and link text
     document.querySelectorAll(".channel-card").forEach(function (card) {
       var ch = card.getAttribute("data-channel");
       card.classList.toggle("channel-card-active", ch === channel);
-      var link = card.querySelector(".channel-card-notes-link");
-      if (link) link.textContent = ch === channel ? "▾ 当前更新日志" : "查看更新日志";
     });
-    var section = document.getElementById("releaseNotesSection");
-    if (section && section.style.display !== "none") {
-      section.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
   }
 
   function renderReleaseNotes() {
@@ -520,6 +504,7 @@
     initTabs();
     initPlatformSelector();
     initArchOverlay();
+    initChannelHover();
     initHistory();
 
     state.platform = detectPlatform();
