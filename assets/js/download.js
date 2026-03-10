@@ -10,13 +10,13 @@
   // ── Config ──
   var OSS_BASE = "https://dl-openakita.fzstack.com";
   var GH_REPO = "openakita/openakita";
-  var CHANNELS = ["stable", "pre-release", "dev"];
-  var CHANNEL_IDS = { stable: "stable", "pre-release": "prerelease", dev: "dev" };
+  var CHANNELS = ["release", "pre-release", "dev"];
+  var CHANNEL_IDS = { release: "release", "pre-release": "prerelease", dev: "dev" };
 
   // ── State ──
   var state = {
     platform: null,
-    manifests: {},       // { stable: {...}, "pre-release": {...}, dev: {...} }
+    manifests: {},       // { release: {...}, "pre-release": {...}, dev: {...} }
     versionsIndex: null,  // versions.json content
     versionCache: {},     // { "v1.25.9": manifest }
     historyLoaded: false,
@@ -105,7 +105,7 @@
     });
     return {
       version: tag.replace(/^v/, ""),
-      channel: "stable",
+      channel: "release",
       pub_date: release.published_at || "",
       notes: release.body || "",
       downloads: downloads,
@@ -277,7 +277,7 @@
     if (!overlay || !body) return;
 
     var items = (manifest.downloads || {})[platform] || [];
-    var channelLabel = { stable: "稳定版", "pre-release": "抢先版", dev: "开发版" }[channel] || channel;
+    var channelLabel = { release: "稳定版", "pre-release": "抢先版", dev: "开发版" }[channel] || channel;
     title.textContent = channelLabel + " v" + manifest.version + " — " + platformLabel(platform);
 
     var html = '<div class="arch-list">';
@@ -320,7 +320,7 @@
     var contentEl = document.getElementById("releaseNotesContent");
     if (!section || !contentEl) return;
 
-    var manifest = state.manifests.stable || state.manifests["pre-release"] || state.manifests.dev;
+    var manifest = state.manifests.release || state.manifests["pre-release"] || state.manifests.dev;
     if (!manifest || !manifest.notes) {
       section.style.display = "none";
       return;
@@ -358,33 +358,57 @@
   }
 
   function renderHistory(index, container) {
-    var sections = [
-      { key: "stable", label: "稳定版" },
-      { key: "pre_release", label: "抢先版" },
-      { key: "dev", label: "开发版" },
-    ];
+    var channelKeys = ["release", "pre_release", "dev"];
+    var channelLabels = { release: "稳定版", pre_release: "抢先版", dev: "开发版" };
+
+    // Merge all entries from all channels, keeping the latest patch per minor version
+    var minorGroups = {};
+    channelKeys.forEach(function (key) {
+      var entries = index[key];
+      if (!entries) return;
+      entries.forEach(function (entry) {
+        var parts = entry.version.split(".");
+        if (parts.length < 2) return;
+        var minor = parts[0] + "." + parts[1];
+        var patch = parseInt(parts[2], 10) || 0;
+
+        if (!minorGroups[minor] || patch > minorGroups[minor].patch) {
+          minorGroups[minor] = {
+            version: entry.version,
+            pub_date: entry.pub_date,
+            platforms: entry.platforms,
+            channel: key,
+            channelLabel: channelLabels[key] || key,
+            patch: patch,
+          };
+        }
+      });
+    });
+
+    // Sort by minor version descending
+    var sortedMinors = Object.keys(minorGroups).sort(function (a, b) {
+      var ap = a.split(".").map(Number);
+      var bp = b.split(".").map(Number);
+      return (bp[0] - ap[0]) || (bp[1] - ap[1]);
+    });
 
     var html = "";
-    sections.forEach(function (sec) {
-      var entries = index[sec.key];
-      if (!entries || entries.length === 0) return;
-      html += '<div class="history-channel">';
-      html += '<h4 class="history-channel-label">' + sec.label + '</h4>';
+    if (sortedMinors.length > 0) {
       html += '<div class="history-list">';
-      entries.forEach(function (entry) {
+      sortedMinors.forEach(function (minor) {
+        var entry = minorGroups[minor];
         var platforms = (entry.platforms || []).map(function (p) { return platformLabel(p); }).join(", ");
         html += '<div class="history-item" data-version="' + escapeHtml(entry.version) + '">';
         html += '<span class="history-version">v' + escapeHtml(entry.version) + '</span>';
+        html += '<span class="history-channel-tag">' + escapeHtml(entry.channelLabel) + '</span>';
         html += '<span class="history-date">' + formatDate(entry.pub_date) + '</span>';
         html += '<span class="history-platforms">' + escapeHtml(platforms) + '</span>';
         html += '<button class="history-dl-btn" data-version="' + escapeHtml(entry.version) + '">下载</button>';
         html += '<button class="history-notes-btn" data-version="' + escapeHtml(entry.version) + '">更新日志</button>';
         html += '</div>';
       });
-      html += '</div></div>';
-    });
-
-    if (!html) {
+      html += '</div>';
+    } else {
       html = '<p>暂无历史版本数据。</p>';
     }
 
@@ -415,7 +439,7 @@
         alert("v" + version + " 暂无 " + platformLabel(platform) + " 安装包");
         return;
       }
-      showArchDetail(manifest.channel || "stable", manifest, platform);
+      showArchDetail(manifest.channel || "release", manifest, platform);
     });
   }
 
@@ -448,23 +472,23 @@
 
     // Load all three channel manifests in parallel
     Promise.allSettled([
-      fetchChannelManifest("stable"),
+      fetchChannelManifest("release"),
       fetchChannelManifest("pre-release"),
       fetchChannelManifest("dev"),
     ]).then(function (results) {
-      var stable = results[0].status === "fulfilled" ? results[0].value : null;
+      var release = results[0].status === "fulfilled" ? results[0].value : null;
       var preRelease = results[1].status === "fulfilled" ? results[1].value : null;
       var dev = results[2].status === "fulfilled" ? results[2].value : null;
 
-      // Fallback to GitHub API if no stable manifest found
-      if (!stable || !stable.version) {
+      // Fallback to GitHub API if no release manifest found
+      if (!release || !release.version) {
         return fetchGHLatest().then(function (ghRelease) {
           var ghManifest = ghAssetToDownloads(ghRelease);
-          if (ghManifest) stable = ghManifest;
-          return { stable: stable, "pre-release": preRelease, dev: dev };
+          if (ghManifest) release = ghManifest;
+          return { release: release, "pre-release": preRelease, dev: dev };
         });
       }
-      return { stable: stable, "pre-release": preRelease, dev: dev };
+      return { release: release, "pre-release": preRelease, dev: dev };
     }).then(function (manifests) {
       // Deduplicate: if two channels have the same version, hide the lower-priority one
       var versions = {};
@@ -493,7 +517,7 @@
       // Update legacy home page version badge if present
       var verBadge = document.getElementById("latestReleaseVersion");
       var dateBadge = document.getElementById("latestReleaseDate");
-      var displayM = manifests.stable || manifests["pre-release"] || manifests.dev;
+      var displayM = manifests.release || manifests["pre-release"] || manifests.dev;
       if (verBadge && displayM) verBadge.textContent = "v" + displayM.version;
       if (dateBadge && displayM) dateBadge.textContent = formatDate(displayM.pub_date);
     });
