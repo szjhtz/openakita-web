@@ -922,14 +922,10 @@ th {
   white-space: pre;
 }
 
-.code-block.has-copy {
-  padding-top: 46px;
-}
-
 .code-copy-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 8px;
+  right: 8px;
   border-radius: 999px;
   border: 1px solid rgba(117, 175, 222, 0.52);
   background: rgba(255, 255, 255, 0.88);
@@ -938,10 +934,24 @@ th {
   font-weight: 700;
   padding: 4px 12px;
   cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.code-block:hover .code-copy-btn {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .code-copy-btn:hover {
   border-color: rgba(68, 146, 218, 0.56);
+}
+
+.code-copy-btn[data-state="copied"],
+.code-copy-btn[data-state="failed"] {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .code-copy-btn[data-state="copied"] {

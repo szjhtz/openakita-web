@@ -760,7 +760,6 @@
       const codeNode = block.querySelector("code");
       if (!codeNode) return;
 
-      block.classList.add("has-copy");
       let btn = block.querySelector(".code-copy-btn");
 
       if (!btn) {
