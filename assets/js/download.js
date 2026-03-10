@@ -137,6 +137,12 @@
     return items[0];
   }
 
+  function shortArchLabel(nickname) {
+    if (/arm64|aarch64|apple.silicon/i.test(nickname)) return "Apple 芯片版";
+    if (/x64|x86_64|intel/i.test(nickname)) return "Intel 芯片版";
+    return nickname;
+  }
+
   function renderMarkdown(md) {
     if (typeof marked !== "undefined" && marked.parse) {
       return marked.parse(md || "");
@@ -209,11 +215,25 @@
     if (dateEl) dateEl.textContent = formatDate(manifest.pub_date);
 
     var platform = state.platform;
-    var dl = pickPlatformDownload(manifest.downloads, platform);
+    var platformItems = manifest.downloads ? manifest.downloads[platform] : null;
+    var dl = platformItems && platformItems.length > 0 ? platformItems[0] : null;
 
     if (actionsEl) {
       if (platform === "ios" && (!dl || !dl.url)) {
         actionsEl.innerHTML = '<span class="channel-ios-hint">即将推出 — 敬请期待</span>';
+      } else if (platform === "macos" && platformItems && platformItems.length > 1) {
+        var html = '<div class="macos-arch-buttons">';
+        platformItems.forEach(function (item) {
+          var sizeStr = formatSize(item.size);
+          var label = shortArchLabel(item.nickname);
+          html +=
+            '<a class="btn btn-primary channel-dl-btn" href="' + escapeHtml(item.url) + '">' +
+            '下载 ' + escapeHtml(label) +
+            (sizeStr ? ' <span class="dl-size">' + sizeStr + '</span>' : '') +
+            '</a>';
+        });
+        html += '</div>';
+        actionsEl.innerHTML = html;
       } else if (dl) {
         var sizeStr = formatSize(dl.size);
         actionsEl.innerHTML =
@@ -222,17 +242,15 @@
           (sizeStr ? ' <span class="dl-size">' + sizeStr + '</span>' : '') +
           '</a>';
       } else {
-        var ghUrl = "https://github.com/" + GH_REPO + "/releases/tag/v" + manifest.version;
         actionsEl.innerHTML =
-          '<a class="btn btn-secondary channel-dl-btn" href="' + escapeHtml(ghUrl) +
-          '" target="_blank" rel="noopener">前往 GitHub 下载 v' + escapeHtml(manifest.version) + '</a>';
+          '<a class="btn btn-secondary channel-dl-btn" href="#versionHistory" onclick="document.getElementById(\'versionHistory\').open=true;document.getElementById(\'versionHistory\').scrollIntoView({behavior:\'smooth\'});return false;">' +
+          '暂无 ' + escapeHtml(platformLabel(platform)) + ' 安装包 · 查看历史版本</a>';
       }
     }
 
-    // "All architectures" link
-    var platformItems = manifest.downloads ? manifest.downloads[platform] : null;
+    // "All architectures" link (hidden for macOS since both are already shown)
     if (allArchEl) {
-      if (platformItems && platformItems.length > 1) {
+      if (platformItems && platformItems.length > 1 && platform !== "macos") {
         allArchEl.style.display = "";
         allArchEl.onclick = function (e) {
           e.preventDefault();
@@ -332,7 +350,7 @@
     fetchVersionsIndex().then(function (index) {
       state.historyLoaded = true;
       if (!index) {
-        container.innerHTML = '<p>无法加载历史版本数据。<a href="https://github.com/' + GH_REPO + '/releases" target="_blank" rel="noopener">前往 GitHub Releases</a></p>';
+        container.innerHTML = '<p>暂无历史版本数据，请稍后再试。</p>';
         return;
       }
       renderHistory(index, container);
@@ -388,13 +406,13 @@
   function showHistoryDownload(version) {
     fetchVersionManifest(version).then(function (manifest) {
       if (!manifest) {
-        window.open("https://github.com/" + GH_REPO + "/releases/tag/v" + version, "_blank");
+        alert("v" + version + " 暂无下载数据");
         return;
       }
       var platform = state.platform;
       var items = (manifest.downloads || {})[platform] || [];
       if (items.length === 0) {
-        window.open("https://github.com/" + GH_REPO + "/releases/tag/v" + version, "_blank");
+        alert("v" + version + " 暂无 " + platformLabel(platform) + " 安装包");
         return;
       }
       showArchDetail(manifest.channel || "stable", manifest, platform);
@@ -404,7 +422,7 @@
   function showHistoryNotes(version) {
     fetchVersionManifest(version).then(function (manifest) {
       if (!manifest || !manifest.notes) {
-        window.open("https://github.com/" + GH_REPO + "/releases/tag/v" + version, "_blank");
+        alert("v" + version + " 暂无更新日志");
         return;
       }
       var section = document.getElementById("releaseNotesSection");
