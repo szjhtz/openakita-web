@@ -439,7 +439,8 @@
         var platforms = (entry.platforms || []).map(function (p) { return platformLabel(p); }).join(", ");
         html += '<div class="history-item" data-version="' + escapeHtml(entry.version) + '">';
         html += '<span class="history-version">v' + escapeHtml(entry.version) + '</span>';
-        html += '<span class="history-channel-tag">' + escapeHtml(entry.channelLabel) + '</span>';
+        var tagClass = { release: "badge-release", pre_release: "badge-prerelease", dev: "badge-dev" }[entry.channel] || "";
+        html += '<span class="history-channel-tag ' + tagClass + '">' + escapeHtml(entry.channelLabel) + '</span>';
         html += '<span class="history-date">' + formatDate(entry.pub_date) + '</span>';
         html += '<span class="history-platforms">' + escapeHtml(platforms) + '</span>';
         html += '<button class="history-dl-btn" data-version="' + escapeHtml(entry.version) + '">下载</button>';
