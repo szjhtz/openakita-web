@@ -139,7 +139,7 @@
   }
 
   function shortArchLabel(nickname) {
-    if (/arm64|aarch64|apple.silicon/i.test(nickname)) return "Apple 芯片版";
+    if (/arm64|aarch64|apple.silicon/i.test(nickname)) return "Apple 芯片版 (M系列)";
     if (/x64|x86_64|intel/i.test(nickname)) return "Intel 芯片版";
     return nickname;
   }
