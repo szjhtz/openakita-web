@@ -52,48 +52,145 @@
 <p data-i18n="download.0003">官方支持 Desktop、CLI、源码部署三种方式。你可以从简单到深入逐步切换。</p>
 </div>
 </section>
+
+<!-- ── 安装方式 Tab ── -->
 <section>
+<div class="container">
+  <div class="install-tabs" role="tablist">
+    <button class="install-tab active" role="tab" aria-selected="true" data-tab="desktop">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <span>Desktop</span>
+    </button>
+    <button class="install-tab" role="tab" aria-selected="false" data-tab="cli">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+      <span>CLI</span>
+    </button>
+    <button class="install-tab" role="tab" aria-selected="false" data-tab="source">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      <span data-i18n="download.0014">源码安装</span>
+    </button>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- Desktop Tab -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="tab-panel active" id="panel-desktop" role="tabpanel">
+<div class="container">
+
+  <!-- 平台选择器 -->
+  <div class="platform-selector" id="platformSelector">
+    <button class="platform-btn" data-platform="windows">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-13.051-1.849"/></svg>
+      <span>Windows</span>
+    </button>
+    <button class="platform-btn" data-platform="macos">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      <span>macOS</span>
+    </button>
+    <button class="platform-btn" data-platform="linux">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 00-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.536.058.399.116.728.04.97-.249.68-.28 1.145-.106 1.484.174.334.535.47.94.601.81.2 1.91.135 2.774.6.926.466 1.866.67 2.616.47.526-.116.97-.464 1.208-.946.587-.003 1.23-.269 2.26-.334.699-.058 1.574.267 2.577.2.025.134.063.198.114.333l.003.003c.391.778 1.113 1.368 1.884 1.43.868.065 1.157-.36 1.524-.782.053-.064.106-.113.168-.18.069-.076.164-.11.264-.122a2.77 2.77 0 00.775-.261c.178-.117.339-.268.475-.383.292-.249.586-.422.776-.891.19-.47.087-1.27-.056-1.762-.129-.426-.4-.762-.587-1.022a1.42 1.42 0 01-.167-.31c-.082-.206-.106-.462-.027-.762.037-.142.091-.294.142-.443.147-.46.39-.922.256-1.559-.064-.324-.153-.662-.265-.937-.26-.626-.546-1.094-.66-1.71a3.9 3.9 0 01-.065-1.055c.026-.41.108-.728.14-1.073.028-.334 0-.672-.147-.97a1.57 1.57 0 00-.579-.618c-.294-.182-.628-.268-.95-.341-.378-.088-.657-.176-.94-.477-.282-.3-.47-.707-.554-1.163-.085-.455-.105-.855-.07-1.271.026-.306.109-.632.012-.985-.092-.333-.344-.585-.535-.796-.126-.138-.396-.37-.486-.587a.93.93 0 01.032-.59c.082-.192.22-.375.376-.491a1.39 1.39 0 00.455-.7c.049-.236.017-.455-.047-.687A3.05 3.05 0 0016.7 2.49c-.266-.526-.627-.924-1.073-1.195-.446-.27-.94-.438-1.493-.513A6.2 6.2 0 0012.504 0z"/></svg>
+      <span>Linux</span>
+    </button>
+    <button class="platform-btn" data-platform="android">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 15.341a.996.996 0 010-1.994.996.996 0 010 1.994m-11.046 0a.996.996 0 010-1.994.996.996 0 010 1.994m11.405-6.02l1.997-3.46a.416.416 0 00-.152-.566.416.416 0 00-.566.152l-2.024 3.505a12.2 12.2 0 00-5.274-1.174c-1.903 0-3.674.44-5.274 1.174L4.614 5.447a.416.416 0 00-.566-.152.416.416 0 00-.152.566l1.997 3.46C2.688 11.196.343 14.476 0 18.3h24c-.344-3.824-2.688-7.104-5.882-8.979"/></svg>
+      <span>Android</span>
+    </button>
+    <button class="platform-btn" data-platform="ios">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      <span>iOS</span>
+    </button>
+  </div>
+
+  <!-- 三渠道卡片 -->
+  <div class="channel-cards" id="channelCards">
+    <div class="channel-card" data-channel="stable">
+      <div class="channel-card-header">
+        <span class="channel-badge badge-stable">稳定版</span>
+        <span class="channel-recommend">推荐</span>
+      </div>
+      <div class="channel-card-version" id="stableVersion">--</div>
+      <div class="channel-card-date" id="stableDate"></div>
+      <p class="channel-card-desc">推荐日常使用。经过充分测试，基本无 bug，适合追求稳定体验的用户。</p>
+      <div class="channel-card-actions" id="stableActions">
+        <span class="channel-loading">加载中...</span>
+      </div>
+      <a class="channel-card-all-arch" id="stableAllArch" href="#" style="display:none">查看全部架构</a>
+    </div>
+
+    <div class="channel-card" data-channel="pre-release">
+      <div class="channel-card-header">
+        <span class="channel-badge badge-prerelease">抢先版</span>
+      </div>
+      <div class="channel-card-version" id="prereleaseVersion">--</div>
+      <div class="channel-card-date" id="prereleaseDate"></div>
+      <p class="channel-card-desc">抢先体验新功能。包含最新已完成的功能特性，可能存在少量 bug，适合愿意尝鲜的用户。</p>
+      <div class="channel-card-actions" id="prereleaseActions">
+        <span class="channel-loading">加载中...</span>
+      </div>
+      <a class="channel-card-all-arch" id="prereleaseAllArch" href="#" style="display:none">查看全部架构</a>
+    </div>
+
+    <div class="channel-card" data-channel="dev">
+      <div class="channel-card-header">
+        <span class="channel-badge badge-dev">开发版</span>
+      </div>
+      <div class="channel-card-version" id="devVersion">--</div>
+      <div class="channel-card-date" id="devDate"></div>
+      <p class="channel-card-desc">最新开发版本。包含正在开发中的功能，存在较多 bug，仅建议开发者或高级用户使用。</p>
+      <div class="channel-card-actions" id="devActions">
+        <span class="channel-loading">加载中...</span>
+      </div>
+      <a class="channel-card-all-arch" id="devAllArch" href="#" style="display:none">查看全部架构</a>
+    </div>
+  </div>
+
+  <!-- 渠道选择说明 -->
+  <details class="channel-guide">
+    <summary>如何选择版本？</summary>
+    <div class="channel-guide-content">
+      <ul>
+        <li><strong>只想稳定用</strong> → 稳定版</li>
+        <li><strong>想提前体验新功能、能接受偶尔出问题</strong> → 抢先版</li>
+        <li><strong>想跟进最新进展、愿意帮忙测试反馈</strong> → 开发版</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- 架构详情弹层 -->
+  <div class="arch-detail-overlay" id="archDetailOverlay" style="display:none">
+    <div class="arch-detail-panel">
+      <div class="arch-detail-header">
+        <h3 id="archDetailTitle">下载选项</h3>
+        <button class="arch-detail-close" id="archDetailClose" aria-label="关闭">&times;</button>
+      </div>
+      <div class="arch-detail-body" id="archDetailBody"></div>
+    </div>
+  </div>
+
+  <!-- 更新日志 -->
+  <div class="release-notes-section" id="releaseNotesSection" style="display:none">
+    <h3 class="release-notes-title" id="releaseNotesTitle">更新日志</h3>
+    <div class="release-notes-content" id="releaseNotesContent"></div>
+  </div>
+
+  <!-- 历史版本 -->
+  <details class="version-history" id="versionHistory">
+    <summary>历史版本</summary>
+    <div class="version-history-content" id="versionHistoryContent">
+      <p class="channel-loading">点击展开加载历史版本...</p>
+    </div>
+  </details>
+
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- CLI Tab -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="tab-panel" id="panel-cli" role="tabpanel" style="display:none">
 <div class="container card-grid">
-<article class="card reveal" style="grid-column: 1 / -1;">
-<img alt="desktop" class="card-icon" src="../assets/img/icons/download.svg"/>
-<h3>Desktop 安装包（Win / macOS / Linux）</h3>
-
-<!-- ── 稳定版（release.json） ── -->
-<div id="devDownloadSection" class="download-channel" style="margin-top:20px;">
-  <div class="channel-header">
-    <span class="channel-badge channel-dev">稳定版</span>
-    <span class="channel-version" id="devVersion">加载中...</span>
-    <span class="channel-date" id="devDate"></span>
-  </div>
-  <div class="channel-buttons" id="devButtons">
-    <a class="download-btn download-btn-primary" id="devPrimaryBtn" href="#">
-      <span class="download-btn-os" id="devPrimaryOS">检测系统中...</span>
-      <span class="download-btn-meta" id="devPrimaryMeta"></span>
-    </a>
-  </div>
-  <div class="channel-platforms" id="devPlatforms"></div>
-</div>
-
-<!-- ── 预览版（pre-release.json） ── -->
-<div id="stableDownloadSection" class="download-channel" style="margin-top:20px; display:none;">
-  <div class="channel-header">
-    <span class="channel-badge channel-stable">预览版</span>
-    <span class="channel-version" id="stableVersion"></span>
-    <span class="channel-date" id="stableDate"></span>
-  </div>
-  <div class="channel-buttons" id="stableButtons">
-    <a class="download-btn download-btn-stable" id="stablePrimaryBtn" href="#">
-      <span class="download-btn-os" id="stablePrimaryOS"></span>
-      <span class="download-btn-meta" id="stablePrimaryMeta"></span>
-    </a>
-  </div>
-  <div class="channel-platforms" id="stablePlatforms"></div>
-</div>
-
-<div class="actions" style="margin-top:16px;">
-  <a class="btn btn-secondary" href="https://github.com/openakita/openakita/releases" rel="noreferrer noopener" target="_blank">全部版本</a>
-</div>
-</article>
 <article class="card reveal">
 <img alt="cli" class="card-icon" src="../assets/img/icons/book.svg"/>
 <h3 data-i18n="download.0011">PyPI CLI 安装</h3>
@@ -119,6 +216,30 @@ openakita</code></div>
 <a class="btn btn-secondary" data-i18n="download.0013" href="/tutorials/setup-install/">查看安装教程</a>
 </div>
 </article>
+
+<article class="card reveal">
+<h3 data-i18n="download.0018">一键脚本安装</h3>
+<p data-i18n="download.0017">官方脚本来自项目仓库 <code>scripts/quickstart.*</code>。</p>
+<div class="two-col" style="margin-top: 12px;">
+<div>
+<h4 data-i18n="download.0018">Linux / macOS</h4>
+<div class="code-block"><code>curl -fsSL https://raw.githubusercontent.com/openakita/openakita/main/scripts/quickstart.sh | bash</code></div>
+</div>
+<div>
+<h4 data-i18n="download.0019">Windows PowerShell</h4>
+<div class="code-block"><code>irm https://raw.githubusercontent.com/openakita/openakita/main/scripts/quickstart.ps1 | iex</code></div>
+</div>
+</div>
+<p class="notice" data-i18n="download.0020">脚本会自动准备虚拟环境与基础配置，适合第一次落地。</p>
+</article>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- Source Tab -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="tab-panel" id="panel-source" role="tabpanel" style="display:none">
+<div class="container card-grid">
 <article class="card reveal">
 <img alt="source" class="card-icon" src="../assets/img/icons/github.svg"/>
 <h3 data-i18n="download.0014">源码安装</h3>
@@ -143,25 +264,10 @@ openakita init</code></div>
 </article>
 </div>
 </section>
-<section>
-<div class="container reveal">
-<div class="section-head">
-<h2 data-i18n="download.0016">一键脚本安装</h2>
-<p data-i18n="download.0017">官方脚本来自项目仓库 `scripts/quickstart.*`。</p>
-</div>
-<div class="two-col">
-<article class="card">
-<h3 data-i18n="download.0018">Linux / macOS</h3>
-<div class="code-block"><code>curl -fsSL https://raw.githubusercontent.com/openakita/openakita/main/scripts/quickstart.sh | bash</code></div>
-</article>
-<article class="card">
-<h3 data-i18n="download.0019">Windows PowerShell</h3>
-<div class="code-block"><code>irm https://raw.githubusercontent.com/openakita/openakita/main/scripts/quickstart.ps1 | iex</code></div>
-</article>
-</div>
-<p class="notice" data-i18n="download.0020">脚本会自动准备虚拟环境与基础配置，适合第一次落地。</p>
-</div>
-</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- 系统要求 -->
+<!-- ══════════════════════════════════════════════════════ -->
 <section>
 <div class="container reveal">
 <div class="section-head">
@@ -211,10 +317,12 @@ openakita init</code></div>
 </div>
 </div>
 <div class="container" style="margin-top: 16px; color: var(--text-muted); font-size: 13px;">
-      © <span data-current-year=""></span> OpenAkita Contributors
+      &copy; <span data-current-year=""></span> OpenAkita Contributors
     </div>
 </footer>
 <script src="../assets/js/motion.js"></script>
-  <script src="../assets/js/main.js"></script>
+<script src="../assets/js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@15/marked.min.js"></script>
+<script src="../assets/js/download.js"></script>
 </body>
 </html>
