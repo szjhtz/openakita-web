@@ -31,6 +31,7 @@
         nav: {
           home: "首页",
           download: "下载",
+          services: "服务",
           tutorials: "教程",
           about: "关于我们",
           github: "GitHub",
@@ -48,6 +49,7 @@
           copied: "已复制",
           failed: "复制失败",
         },
+        footerTagline: "Self-Evolving AI Agent：自主学习，永不放弃。",
       },
       home: {
         meta: {
@@ -154,6 +156,36 @@
           desc: "OpenAkita 是一个自进化 AI Agent 项目，目标是让 Agent 在真实生产场景可部署、可协作、可持续进化。",
         },
       },
+      services: {
+        meta: {
+          title: "服务 - OpenAkita AI Agent 产品与解决方案",
+          description: "OpenAkita 提供开源 AI Agent 框架、跨平台桌面应用和面向企业的商业定制服务。",
+        },
+        hero: {
+          title: "产品与服务",
+          desc: "从开源通用助手到企业级定制方案，OpenAkita 为不同场景提供灵活的 AI Agent 解决方案。",
+        },
+      },
+      terms: {
+        meta: {
+          title: "服务条款 - OpenAkita",
+          description: "OpenAkita 服务条款：使用范围、知识产权、免责声明及相关法律条款。",
+        },
+        hero: {
+          title: "服务条款",
+          desc: "最后更新日期：2026 年 3 月 11 日",
+        },
+      },
+      privacy: {
+        meta: {
+          title: "隐私政策 - OpenAkita",
+          description: "OpenAkita 隐私政策：数据收集、使用方式、用户权利及安全措施。",
+        },
+        hero: {
+          title: "隐私政策",
+          desc: "最后更新日期：2026 年 3 月 11 日",
+        },
+      },
     },
     en: {
       common: {
@@ -162,6 +194,7 @@
         nav: {
           home: "Home",
           download: "Download",
+          services: "Services",
           tutorials: "Tutorials",
           about: "About",
           github: "GitHub",
@@ -179,6 +212,7 @@
           copied: "Copied",
           failed: "Copy failed",
         },
+        footerTagline: "Self-Evolving AI Agent: Learn, adapt, never give up.",
       },
       home: {
         meta: {
@@ -282,12 +316,43 @@
           desc: "OpenAkita is a self-evolving AI Agent project built for real production scenarios.",
         },
       },
+      services: {
+        meta: {
+          title: "Services - OpenAkita AI Agent Products & Solutions",
+          description: "OpenAkita provides an open-source AI Agent framework, cross-platform desktop app, and enterprise customization services.",
+        },
+        hero: {
+          title: "Products & Services",
+          desc: "From an open-source general assistant to enterprise-grade custom solutions, OpenAkita delivers flexible AI Agent solutions for every scenario.",
+        },
+      },
+      terms: {
+        meta: {
+          title: "Terms of Service - OpenAkita",
+          description: "OpenAkita Terms of Service: scope of use, intellectual property, disclaimers, and legal provisions.",
+        },
+        hero: {
+          title: "Terms of Service",
+          desc: "Last updated: March 11, 2026",
+        },
+      },
+      privacy: {
+        meta: {
+          title: "Privacy Policy - OpenAkita",
+          description: "OpenAkita Privacy Policy: data collection, usage, user rights, and security measures.",
+        },
+        hero: {
+          title: "Privacy Policy",
+          desc: "Last updated: March 11, 2026",
+        },
+      },
     },
     ja: {
       common: {
         navToggle: "ナビを開く",
         language: "言語",
-        nav: { home: "ホーム", download: "ダウンロード", tutorials: "チュートリアル", about: "概要", github: "GitHub" },
+        nav: { home: "ホーム", download: "ダウンロード", services: "サービス", tutorials: "チュートリアル", about: "概要", github: "GitHub" },
+        footerTagline: "Self-Evolving AI Agent：自ら学び、決して諦めない。",
       },
       home: {
         hero: {
@@ -311,12 +376,16 @@
         side: ["概要", "API Key", ".env", "llm_endpoints.json", "ルーティング", "検証", "動画"],
       },
       about: { hero: { title: "私たちについて", desc: "OpenAkita のビジョンとコミュニティ。" } },
+      services: { hero: { title: "製品とサービス", desc: "オープンソースの汎用アシスタントからエンタープライズ向けカスタムソリューションまで。" } },
+      terms: { hero: { title: "利用規約", desc: "最終更新日：2026年3月11日" } },
+      privacy: { hero: { title: "プライバシーポリシー", desc: "最終更新日：2026年3月11日" } },
     },
     ko: {
       common: {
         navToggle: "탐색 열기",
         language: "언어",
-        nav: { home: "홈", download: "다운로드", tutorials: "튜토리얼", about: "소개", github: "GitHub" },
+        nav: { home: "홈", download: "다운로드", services: "서비스", tutorials: "튜토리얼", about: "소개", github: "GitHub" },
+        footerTagline: "Self-Evolving AI Agent: 스스로 학습하고, 절대 포기하지 않습니다.",
       },
       home: {
         hero: {
@@ -340,12 +409,16 @@
         side: ["개요", "API Key", ".env", "llm_endpoints.json", "라우팅", "검증", "영상"],
       },
       about: { hero: { title: "소개", desc: "OpenAkita 비전과 커뮤니티." } },
+      services: { hero: { title: "제품 및 서비스", desc: "오픈 소스 범용 어시스턴트부터 기업용 맞춤 솔루션까지." } },
+      terms: { hero: { title: "서비스 약관", desc: "최종 업데이트: 2026년 3월 11일" } },
+      privacy: { hero: { title: "개인정보 처리방침", desc: "최종 업데이트: 2026년 3월 11일" } },
     },
     ru: {
       common: {
         navToggle: "Открыть навигацию",
         language: "Язык",
-        nav: { home: "Главная", download: "Скачать", tutorials: "Руководства", about: "О проекте", github: "GitHub" },
+        nav: { home: "Главная", download: "Скачать", services: "Услуги", tutorials: "Руководства", about: "О проекте", github: "GitHub" },
+        footerTagline: "Self-Evolving AI Agent: Учится, адаптируется, никогда не сдаётся.",
       },
       home: {
         hero: {
@@ -369,12 +442,16 @@
         side: ["Обзор", "API Key", ".env", "llm_endpoints.json", "Маршрутизация", "Проверка", "Видео"],
       },
       about: { hero: { title: "О нас", desc: "Видение OpenAkita и сообщество." } },
+      services: { hero: { title: "Продукты и услуги", desc: "От универсального помощника до корпоративных решений." } },
+      terms: { hero: { title: "Условия использования", desc: "Последнее обновление: 11 марта 2026 г." } },
+      privacy: { hero: { title: "Политика конфиденциальности", desc: "Последнее обновление: 11 марта 2026 г." } },
     },
     fr: {
       common: {
         navToggle: "Ouvrir la navigation",
         language: "Langue",
-        nav: { home: "Accueil", download: "Télécharger", tutorials: "Tutoriels", about: "À propos", github: "GitHub" },
+        nav: { home: "Accueil", download: "Télécharger", services: "Services", tutorials: "Tutoriels", about: "À propos", github: "GitHub" },
+        footerTagline: "Self-Evolving AI Agent : Apprendre, s'adapter, ne jamais abandonner.",
       },
       home: {
         hero: {
@@ -398,12 +475,16 @@
         side: ["Aperçu", "API Key", ".env", "llm_endpoints.json", "Routage", "Validation", "Vidéo"],
       },
       about: { hero: { title: "À propos", desc: "Vision OpenAkita et communauté." } },
+      services: { hero: { title: "Produits et services", desc: "De l'assistant open source aux solutions d'entreprise sur mesure." } },
+      terms: { hero: { title: "Conditions d'utilisation", desc: "Dernière mise à jour : 11 mars 2026" } },
+      privacy: { hero: { title: "Politique de confidentialité", desc: "Dernière mise à jour : 11 mars 2026" } },
     },
     de: {
       common: {
         navToggle: "Navigation öffnen",
         language: "Sprache",
-        nav: { home: "Start", download: "Download", tutorials: "Tutorials", about: "Über uns", github: "GitHub" },
+        nav: { home: "Start", download: "Download", services: "Dienste", tutorials: "Tutorials", about: "Über uns", github: "GitHub" },
+        footerTagline: "Self-Evolving AI Agent: Lernen, anpassen, nie aufgeben.",
       },
       home: {
         hero: {
@@ -427,6 +508,9 @@
         side: ["Überblick", "API Key", ".env", "llm_endpoints.json", "Routing", "Validierung", "Video"],
       },
       about: { hero: { title: "Über uns", desc: "Vision und Community von OpenAkita." } },
+      services: { hero: { title: "Produkte und Dienste", desc: "Vom Open-Source-Universalassistenten bis zur maßgeschneiderten Unternehmenslösung." } },
+      terms: { hero: { title: "Nutzungsbedingungen", desc: "Letzte Aktualisierung: 11. März 2026" } },
+      privacy: { hero: { title: "Datenschutzrichtlinie", desc: "Letzte Aktualisierung: 11. März 2026" } },
     },
   };
 
@@ -474,6 +558,9 @@
     if (path.includes("/tutorials/llm-endpoints")) return "llm";
     if (path === "/tutorials" || path.startsWith("/tutorials/")) return "tutorials";
     if (path === "/download" || path.startsWith("/download/")) return "download";
+    if (path === "/services" || path.startsWith("/services/")) return "services";
+    if (path === "/terms" || path.startsWith("/terms/")) return "terms";
+    if (path === "/privacy" || path.startsWith("/privacy/")) return "privacy";
     if (path === "/about" || path.startsWith("/about/")) return "about";
     return "home";
   }
@@ -602,11 +689,13 @@
     setAttr(".nav-toggle", "aria-label", t("common.navToggle"));
     setText('.main-nav a[data-nav="home"]', t("common.nav.home"));
     setText('.main-nav a[data-nav="download"]', t("common.nav.download"));
+    setText('.main-nav a[data-nav="services"]', t("common.nav.services"));
     setText('.main-nav a[data-nav="tutorials"]', t("common.nav.tutorials"));
     setText('.main-nav a[data-nav="about"]', t("common.nav.about"));
     const githubLink = document.querySelector('.main-nav a[href*="github.com/openakita/openakita"]');
     if (githubLink) githubLink.textContent = t("common.nav.github");
     setText(".lang-label", t("common.language"));
+    setText(".footer-tagline", t("common.footerTagline"));
   }
 
   function applyHomeTexts() {
@@ -665,6 +754,21 @@
     setText(".page-hero p", t("about.hero.desc"));
   }
 
+  function applyServicesTexts() {
+    setText(".page-hero h1", t("services.hero.title"));
+    setText(".page-hero p", t("services.hero.desc"));
+  }
+
+  function applyTermsTexts() {
+    setText(".page-hero h1", t("terms.hero.title"));
+    setText(".page-hero p", t("terms.hero.desc"));
+  }
+
+  function applyPrivacyTexts() {
+    setText(".page-hero h1", t("privacy.hero.title"));
+    setText(".page-hero p", t("privacy.hero.desc"));
+  }
+
   function applyPageTexts(pageKey) {
     if (pageKey === "home") applyHomeTexts();
     if (pageKey === "download") applyDownloadTexts();
@@ -673,6 +777,9 @@
     if (pageKey === "im") applyImTexts();
     if (pageKey === "llm") applyLlmTexts();
     if (pageKey === "about") applyAboutTexts();
+    if (pageKey === "services") applyServicesTexts();
+    if (pageKey === "terms") applyTermsTexts();
+    if (pageKey === "privacy") applyPrivacyTexts();
   }
 
   function injectLanguageSwitcher(pageKey) {
