@@ -50,6 +50,20 @@
           failed: "复制失败",
         },
         footerTagline: "Self-Evolving AI Agent：自主学习，永不放弃。",
+        footer: {
+          quickLinks: "快速链接",
+          followUs: "关注我们",
+          contactUs: "联系我们",
+          download: "下载",
+          services: "服务",
+          tutorials: "教程",
+          about: "关于我们",
+          bizEmail: "商务：",
+          techEmail: "技术：",
+          wxOfficial: "微信公众号",
+          terms: "服务条款",
+          privacy: "隐私政策",
+        },
       },
       home: {
         meta: {
@@ -213,6 +227,20 @@
           failed: "Copy failed",
         },
         footerTagline: "Self-Evolving AI Agent: Learn, adapt, never give up.",
+        footer: {
+          quickLinks: "Quick Links",
+          followUs: "Follow Us",
+          contactUs: "Contact Us",
+          download: "Download",
+          services: "Services",
+          tutorials: "Tutorials",
+          about: "About",
+          bizEmail: "Business: ",
+          techEmail: "Tech: ",
+          wxOfficial: "WeChat Official",
+          terms: "Terms of Service",
+          privacy: "Privacy Policy",
+        },
       },
       home: {
         meta: {
@@ -353,6 +381,20 @@
         language: "言語",
         nav: { home: "ホーム", download: "ダウンロード", services: "サービス", tutorials: "チュートリアル", about: "概要", github: "GitHub" },
         footerTagline: "Self-Evolving AI Agent：自ら学び、決して諦めない。",
+        footer: {
+          quickLinks: "クイックリンク",
+          followUs: "フォロー",
+          contactUs: "お問い合わせ",
+          download: "ダウンロード",
+          services: "サービス",
+          tutorials: "チュートリアル",
+          about: "概要",
+          bizEmail: "ビジネス：",
+          techEmail: "技術：",
+          wxOfficial: "WeChat公式",
+          terms: "利用規約",
+          privacy: "プライバシーポリシー",
+        },
       },
       home: {
         hero: {
@@ -386,6 +428,20 @@
         language: "언어",
         nav: { home: "홈", download: "다운로드", services: "서비스", tutorials: "튜토리얼", about: "소개", github: "GitHub" },
         footerTagline: "Self-Evolving AI Agent: 스스로 학습하고, 절대 포기하지 않습니다.",
+        footer: {
+          quickLinks: "바로가기",
+          followUs: "팔로우",
+          contactUs: "연락처",
+          download: "다운로드",
+          services: "서비스",
+          tutorials: "튜토리얼",
+          about: "소개",
+          bizEmail: "비즈니스: ",
+          techEmail: "기술: ",
+          wxOfficial: "WeChat 공식",
+          terms: "서비스 약관",
+          privacy: "개인정보 처리방침",
+        },
       },
       home: {
         hero: {
@@ -419,6 +475,20 @@
         language: "Язык",
         nav: { home: "Главная", download: "Скачать", services: "Услуги", tutorials: "Руководства", about: "О проекте", github: "GitHub" },
         footerTagline: "Self-Evolving AI Agent: Учится, адаптируется, никогда не сдаётся.",
+        footer: {
+          quickLinks: "Быстрые ссылки",
+          followUs: "Подписаться",
+          contactUs: "Контакты",
+          download: "Скачать",
+          services: "Услуги",
+          tutorials: "Руководства",
+          about: "О проекте",
+          bizEmail: "Бизнес: ",
+          techEmail: "Техподдержка: ",
+          wxOfficial: "WeChat Official",
+          terms: "Условия использования",
+          privacy: "Политика конфиденциальности",
+        },
       },
       home: {
         hero: {
@@ -452,6 +522,20 @@
         language: "Langue",
         nav: { home: "Accueil", download: "Télécharger", services: "Services", tutorials: "Tutoriels", about: "À propos", github: "GitHub" },
         footerTagline: "Self-Evolving AI Agent : Apprendre, s'adapter, ne jamais abandonner.",
+        footer: {
+          quickLinks: "Liens rapides",
+          followUs: "Suivez-nous",
+          contactUs: "Contact",
+          download: "Télécharger",
+          services: "Services",
+          tutorials: "Tutoriels",
+          about: "À propos",
+          bizEmail: "Commercial : ",
+          techEmail: "Technique : ",
+          wxOfficial: "WeChat officiel",
+          terms: "Conditions d'utilisation",
+          privacy: "Politique de confidentialité",
+        },
       },
       home: {
         hero: {
@@ -485,6 +569,20 @@
         language: "Sprache",
         nav: { home: "Start", download: "Download", services: "Dienste", tutorials: "Tutorials", about: "Über uns", github: "GitHub" },
         footerTagline: "Self-Evolving AI Agent: Lernen, anpassen, nie aufgeben.",
+        footer: {
+          quickLinks: "Schnellzugriff",
+          followUs: "Folgen",
+          contactUs: "Kontakt",
+          download: "Download",
+          services: "Dienste",
+          tutorials: "Tutorials",
+          about: "Über uns",
+          bizEmail: "Geschäftlich: ",
+          techEmail: "Technik: ",
+          wxOfficial: "WeChat offiziell",
+          terms: "Nutzungsbedingungen",
+          privacy: "Datenschutzrichtlinie",
+        },
       },
       home: {
         hero: {
@@ -567,12 +665,18 @@
 
   function setText(selector, value) {
     const el = document.querySelector(selector);
-    if (el && typeof value === "string") el.textContent = value;
+    if (el && typeof value === "string") {
+      el.textContent = value;
+      el.dataset.i18nManaged = "";
+    }
   }
 
   function setHtml(selector, value) {
     const el = document.querySelector(selector);
-    if (el && typeof value === "string") el.innerHTML = value;
+    if (el && typeof value === "string") {
+      el.innerHTML = value;
+      el.dataset.i18nManaged = "";
+    }
   }
 
   function setAttr(selector, attr, value) {
@@ -583,6 +687,7 @@
   function setInlineLabel(selector, value) {
     const el = document.querySelector(selector);
     if (!el || typeof value !== "string") return;
+    el.dataset.i18nManaged = "";
     const textNode = Array.from(el.childNodes).find(function (node) {
       return node.nodeType === 3 && node.textContent.trim().length > 0;
     });
@@ -596,7 +701,10 @@
   function setList(selector, values) {
     const nodes = document.querySelectorAll(selector);
     values.forEach(function (value, index) {
-      if (nodes[index] && typeof value === "string") nodes[index].textContent = value;
+      if (nodes[index] && typeof value === "string") {
+        nodes[index].textContent = value;
+        nodes[index].dataset.i18nManaged = "";
+      }
     });
   }
 
@@ -693,9 +801,61 @@
     setText('.main-nav a[data-nav="tutorials"]', t("common.nav.tutorials"));
     setText('.main-nav a[data-nav="about"]', t("common.nav.about"));
     const githubLink = document.querySelector('.main-nav a[href*="github.com/openakita/openakita"]');
-    if (githubLink) githubLink.textContent = t("common.nav.github");
+    if (githubLink) {
+      githubLink.textContent = t("common.nav.github");
+      githubLink.dataset.i18nManaged = "";
+    }
     setText(".lang-label", t("common.language"));
     setText(".footer-tagline", t("common.footerTagline"));
+
+    applyFooterTexts();
+  }
+
+  function applyFooterTexts() {
+    const isStandardFooter = !!document.querySelector(".footer-tagline");
+
+    if (isStandardFooter) {
+      setText(".footer-grid > div:nth-child(2) > h4", t("common.footer.quickLinks"));
+      setText('.footer-grid a[href="/download/"]', t("common.footer.download"));
+      setText('.footer-grid a[href="/services/"]', t("common.footer.services"));
+      setText('.footer-grid a[href="/tutorials/"]', t("common.footer.tutorials"));
+      setText('.footer-grid a[href="/about/"]', t("common.footer.about"));
+      setText('.site-footer a[href="/terms/"]', t("common.footer.terms"));
+      setText('.site-footer a[href="/privacy/"]', t("common.footer.privacy"));
+    }
+
+    const footerCols = document.querySelectorAll(".footer-grid > div");
+    footerCols.forEach(function (col) {
+      const h4 = col.querySelector("h4");
+      if (!h4) return;
+      if (col.querySelector(".footer-qr-list")) {
+        h4.textContent = t("common.footer.followUs");
+        h4.dataset.i18nManaged = "";
+      } else if (col.querySelector('a[href^="mailto:"]')) {
+        h4.textContent = t("common.footer.contactUs");
+        h4.dataset.i18nManaged = "";
+      }
+    });
+
+    const qrSpans = document.querySelectorAll(".footer-qr span");
+    if (qrSpans[0]) { qrSpans[0].textContent = t("common.footer.wxOfficial"); qrSpans[0].dataset.i18nManaged = ""; }
+    if (qrSpans[1]) { qrSpans[1].textContent = "Bilibili"; qrSpans[1].dataset.i18nManaged = ""; }
+
+    setFooterContactLabel("openakita@fzstack.com", t("common.footer.bizEmail"));
+    setFooterContactLabel("simyng@fzstack.com", t("common.footer.techEmail"));
+  }
+
+  function setFooterContactLabel(email, label) {
+    const link = document.querySelector('.site-footer a[href="mailto:' + email + '"]');
+    if (!link) return;
+    const textNodes = [];
+    for (let i = 0; i < link.childNodes.length; i++) {
+      if (link.childNodes[i].nodeType === 3) textNodes.push(link.childNodes[i]);
+    }
+    if (textNodes.length > 0) {
+      textNodes[textNodes.length - 1].nodeValue = label + email;
+    }
+    link.dataset.i18nManaged = "";
   }
 
   function applyHomeTexts() {
@@ -711,19 +871,6 @@
   function applyDownloadTexts() {
     setText(".page-hero h1", t("download.hero.title"));
     setText(".page-hero p", t("download.hero.desc"));
-    setInlineLabel("#downloadDesktopButton", t("download.buttons.latest"));
-    setText("#latestReleaseNotesLink", t("download.buttons.notes"));
-    const releaseListFirst = document.querySelector("#releaseAssetsList li");
-    if (releaseListFirst && !releaseListFirst.querySelector("a")) {
-      releaseListFirst.textContent = t("common.release.loadingAssets");
-    }
-    setText("main > section:nth-of-type(2) .card:nth-child(1) h3", t("download.cards.desktop.title"));
-    setText("main > section:nth-of-type(2) .card:nth-child(1) p", t("download.cards.desktop.desc"));
-    setText("main > section:nth-of-type(2) .card:nth-child(2) h3", t("download.cards.cli.title"));
-    setText("main > section:nth-of-type(2) .card:nth-child(2) p", t("download.cards.cli.desc"));
-    setText("main > section:nth-of-type(2) .card:nth-child(2) .actions a", t("download.cards.cli.btn"));
-    setText("main > section:nth-of-type(2) .card:nth-child(3) h3", t("download.cards.source.title"));
-    setText("main > section:nth-of-type(2) .card:nth-child(3) p", t("download.cards.source.desc"));
   }
 
   function applyTutorialIndexTexts() {
@@ -824,7 +971,7 @@
       applyPageTexts(pageKey);
       applyHomeRevealStagger();
       enhanceCodeBlocks();
-      loadLatestRelease();
+      reverseSourceLookupByLang = {};
       void autoTranslateSiteContent();
       document.dispatchEvent(new CustomEvent("openakita:language-changed"));
     });
@@ -942,9 +1089,17 @@
     return reverse;
   }
 
+  function looksLikeChineseSource(text) {
+    if (typeof text !== "string") return false;
+    if (!/[\u4e00-\u9fff]/.test(text)) return false;
+    if (/[\u3040-\u309f\u30a0-\u30ff]/.test(text)) return false;
+    if (/[\uac00-\ud7af]/.test(text)) return false;
+    return true;
+  }
+
   function inferSourceCore(core) {
     if (typeof core !== "string" || !core) return core;
-    if (/[\u4e00-\u9fff]/.test(core)) return core;
+    if (looksLikeChineseSource(core)) return core;
 
     const candidates = [currentLanguage, "en"].concat(Array.from(AUTO_TRANSLATE_SUPPORTED));
     const seen = new Set();
@@ -1013,7 +1168,7 @@
           continue;
         }
 
-        if (parent.closest("script,style,noscript,textarea,code,pre,.code-block")) {
+        if (parent.closest("script,style,noscript,textarea,code,pre,.code-block,[data-i18n-managed]")) {
           node = walker.nextNode();
           continue;
         }
@@ -1044,7 +1199,7 @@
         if (!sourceCore) {
           sourceCore = inferSourceCore(core);
           contentTextSourceMap.set(node, sourceCore);
-        } else if (!/[\u4e00-\u9fff]/.test(sourceCore)) {
+        } else if (!looksLikeChineseSource(sourceCore)) {
           const recoveredFromCore = inferSourceCore(core);
           if (recoveredFromCore && recoveredFromCore !== sourceCore) {
             sourceCore = recoveredFromCore;
@@ -1059,10 +1214,10 @@
         }
 
         if (currentLanguage === "zh") {
-          if (/[\u4e00-\u9fff]/.test(core)) {
+          if (looksLikeChineseSource(core)) {
             sourceCore = core;
             contentTextSourceMap.set(node, sourceCore);
-          } else if (!/[\u4e00-\u9fff]/.test(sourceCore || "")) {
+          } else if (!looksLikeChineseSource(sourceCore || "")) {
             const recoveredSource = inferSourceCore(core);
             if (recoveredSource && recoveredSource !== sourceCore) {
               sourceCore = recoveredSource;

@@ -13,6 +13,221 @@
   var CHANNELS = ["release", "pre-release", "dev"];
   var CHANNEL_IDS = { release: "release", "pre-release": "prerelease", dev: "dev" };
 
+  // ── Download page i18n ──
+  var DL_MSGS = {
+    zh: {
+      download: "下载",
+      channelRelease: "稳定版",
+      channelPreRelease: "抢先版",
+      channelDev: "开发版",
+      recommend: "推荐",
+      changelog: "更新日志",
+      channelUnavailable: "暂无此渠道版本",
+      iosHint: "即将推出 — 敬请期待",
+      noPlatformPkg: "暂无 {p} 安装包 · 查看历史版本",
+      loading: "加载中...",
+      noHistory: "暂无历史版本数据，请稍后再试。",
+      noHistoryShort: "暂无历史版本数据。",
+      noDownloadData: "暂无下载数据",
+      noPlatformAny: "暂无任何平台安装包",
+      noChangelog: "暂无更新日志",
+      noArchPkg: "该版本暂无 {p} 安装包",
+      archApple: "Apple（M系列）芯片版",
+      archIntel: "Intel 芯片版",
+      viewAllArch: "查看全部架构",
+      downloadOptions: "下载选项",
+      historyVersions: "历史版本",
+      historyHint: "点击展开加载历史版本...",
+      descRelease: "推荐日常使用。经过充分测试，基本无 bug，适合追求稳定体验的用户。",
+      descPreRelease: "抢先体验新功能。包含最新已完成的功能特性，可能存在少量 bug，适合愿意尝鲜的用户。",
+      descDev: "最新开发版本。包含正在开发中的功能，存在较多 bug，仅建议开发者或高级用户使用。",
+      sourceInstall: "源码安装",
+    },
+    en: {
+      download: "Download",
+      channelRelease: "Stable",
+      channelPreRelease: "Early Access",
+      channelDev: "Dev",
+      recommend: "Recommend",
+      changelog: "Changelog",
+      channelUnavailable: "No version available",
+      iosHint: "Coming soon — Stay tuned",
+      noPlatformPkg: "No {p} package · View history",
+      loading: "Loading...",
+      noHistory: "No historical version data. Please try later.",
+      noHistoryShort: "No historical version data.",
+      noDownloadData: "No download data available",
+      noPlatformAny: "No packages available",
+      noChangelog: "No changelog available",
+      noArchPkg: "No {p} packages for this version",
+      archApple: "Apple Silicon (M-Series)",
+      archIntel: "Intel",
+      viewAllArch: "View all architectures",
+      downloadOptions: "Download options",
+      historyVersions: "Historical versions",
+      historyHint: "Click to expand and load history...",
+      descRelease: "Recommended for daily use. Fully tested with minimal bugs, ideal for users who value stability.",
+      descPreRelease: "Be the first to experience new features. Contains the latest completed features, there may be a few bugs, suitable for early adopters.",
+      descDev: "The latest development version. Contains features under development with many bugs. Only recommended for developers or advanced users.",
+      sourceInstall: "Source code installation",
+    },
+    ja: {
+      download: "ダウンロード",
+      channelRelease: "安定版",
+      channelPreRelease: "先行版",
+      channelDev: "開発版",
+      recommend: "推奨",
+      changelog: "更新履歴",
+      channelUnavailable: "このチャネルのバージョンはありません",
+      iosHint: "近日公開予定",
+      noPlatformPkg: "{p} パッケージなし · 履歴を表示",
+      loading: "読み込み中...",
+      noHistory: "過去のバージョンデータがありません。",
+      noHistoryShort: "過去のバージョンデータがありません。",
+      noDownloadData: "ダウンロードデータなし",
+      noPlatformAny: "パッケージがありません",
+      noChangelog: "更新履歴なし",
+      noArchPkg: "このバージョンの {p} パッケージはありません",
+      archApple: "Apple Silicon（Mシリーズ）",
+      archIntel: "Intel",
+      viewAllArch: "全アーキテクチャを表示",
+      downloadOptions: "ダウンロードオプション",
+      historyVersions: "過去のバージョン",
+      historyHint: "クリックして過去のバージョンを読み込む...",
+      descRelease: "日常使用に推奨。十分にテストされ、バグがほぼなく、安定性を重視するユーザーに最適です。",
+      descPreRelease: "新機能をいち早く体験。最新の完成機能を含み、若干のバグがある場合があります。",
+      descDev: "最新の開発版。開発中の機能を含み、バグが多数あります。開発者または上級ユーザーのみ推奨。",
+      sourceInstall: "ソースコードインストール",
+    },
+    ko: {
+      download: "다운로드",
+      channelRelease: "안정판",
+      channelPreRelease: "사전 체험판",
+      channelDev: "개발판",
+      recommend: "추천",
+      changelog: "변경 로그",
+      channelUnavailable: "사용 가능한 버전 없음",
+      iosHint: "곧 출시 예정",
+      noPlatformPkg: "{p} 패키지 없음 · 기록 보기",
+      loading: "로딩 중...",
+      noHistory: "과거 버전 데이터가 없습니다.",
+      noHistoryShort: "과거 버전 데이터가 없습니다.",
+      noDownloadData: "다운로드 데이터 없음",
+      noPlatformAny: "사용 가능한 패키지 없음",
+      noChangelog: "변경 로그 없음",
+      noArchPkg: "이 버전의 {p} 패키지가 없습니다",
+      archApple: "Apple Silicon (M 시리즈)",
+      archIntel: "Intel",
+      viewAllArch: "전체 아키텍처 보기",
+      downloadOptions: "다운로드 옵션",
+      historyVersions: "이전 버전",
+      historyHint: "클릭하여 이전 버전 로드...",
+      descRelease: "일상 사용에 권장됩니다. 충분히 테스트되어 안정적인 경험을 원하는 사용자에게 적합합니다.",
+      descPreRelease: "새로운 기능을 먼저 체험하세요. 약간의 버그가 있을 수 있으며 얼리 어답터에게 적합합니다.",
+      descDev: "최신 개발 버전. 개발 중인 기능이 포함되어 있으며 개발자 또는 고급 사용자만 권장됩니다.",
+      sourceInstall: "소스 코드 설치",
+    },
+    ru: {
+      download: "Скачать",
+      channelRelease: "Стабильная",
+      channelPreRelease: "Ранний доступ",
+      channelDev: "Разработка",
+      recommend: "Рекомендуем",
+      changelog: "Журнал изменений",
+      channelUnavailable: "Версия недоступна",
+      iosHint: "Скоро — следите за обновлениями",
+      noPlatformPkg: "Нет пакета {p} · Просмотр истории",
+      loading: "Загрузка...",
+      noHistory: "Нет данных о предыдущих версиях.",
+      noHistoryShort: "Нет данных о предыдущих версиях.",
+      noDownloadData: "Нет данных для загрузки",
+      noPlatformAny: "Пакеты недоступны",
+      noChangelog: "Журнал изменений недоступен",
+      noArchPkg: "Нет пакетов {p} для этой версии",
+      archApple: "Apple Silicon (серия M)",
+      archIntel: "Intel",
+      viewAllArch: "Все архитектуры",
+      downloadOptions: "Параметры загрузки",
+      historyVersions: "История версий",
+      historyHint: "Нажмите для загрузки истории версий...",
+      descRelease: "Рекомендуется для ежедневного использования. Полностью протестировано, минимум ошибок.",
+      descPreRelease: "Попробуйте новые функции первыми. Может содержать незначительные ошибки.",
+      descDev: "Последняя версия для разработки. Содержит функции в разработке, много ошибок. Только для разработчиков.",
+      sourceInstall: "Установка из исходного кода",
+    },
+    fr: {
+      download: "Télécharger",
+      channelRelease: "Stable",
+      channelPreRelease: "Accès anticipé",
+      channelDev: "Dev",
+      recommend: "Recommandé",
+      changelog: "Journal des modifications",
+      channelUnavailable: "Aucune version disponible",
+      iosHint: "Bientôt disponible",
+      noPlatformPkg: "Pas de paquet {p} · Voir l'historique",
+      loading: "Chargement...",
+      noHistory: "Aucune donnée de version historique.",
+      noHistoryShort: "Aucune donnée de version historique.",
+      noDownloadData: "Aucune donnée de téléchargement",
+      noPlatformAny: "Aucun paquet disponible",
+      noChangelog: "Aucun journal disponible",
+      noArchPkg: "Aucun paquet {p} pour cette version",
+      archApple: "Apple Silicon (série M)",
+      archIntel: "Intel",
+      viewAllArch: "Toutes les architectures",
+      downloadOptions: "Options de téléchargement",
+      historyVersions: "Versions précédentes",
+      historyHint: "Cliquez pour charger les versions précédentes...",
+      descRelease: "Recommandé pour une utilisation quotidienne. Entièrement testé avec un minimum de bugs.",
+      descPreRelease: "Soyez le premier à essayer les nouvelles fonctionnalités. Peut contenir quelques bugs.",
+      descDev: "Dernière version de développement. Contient des fonctionnalités en développement. Réservé aux développeurs.",
+      sourceInstall: "Installation depuis les sources",
+    },
+    de: {
+      download: "Herunterladen",
+      channelRelease: "Stabil",
+      channelPreRelease: "Vorabzugang",
+      channelDev: "Entwicklung",
+      recommend: "Empfohlen",
+      changelog: "Änderungsprotokoll",
+      channelUnavailable: "Keine Version verfügbar",
+      iosHint: "Demnächst verfügbar",
+      noPlatformPkg: "Kein {p}-Paket · Verlauf anzeigen",
+      loading: "Wird geladen...",
+      noHistory: "Keine historischen Versionsdaten.",
+      noHistoryShort: "Keine historischen Versionsdaten.",
+      noDownloadData: "Keine Download-Daten",
+      noPlatformAny: "Keine Pakete verfügbar",
+      noChangelog: "Kein Änderungsprotokoll",
+      noArchPkg: "Keine {p}-Pakete für diese Version",
+      archApple: "Apple Silicon (M-Serie)",
+      archIntel: "Intel",
+      viewAllArch: "Alle Architekturen",
+      downloadOptions: "Download-Optionen",
+      historyVersions: "Versionsverlauf",
+      historyHint: "Klicken zum Laden des Versionsverlaufs...",
+      descRelease: "Empfohlen für den täglichen Gebrauch. Vollständig getestet mit minimalen Fehlern.",
+      descPreRelease: "Neue Funktionen zuerst erleben. Kann einige Fehler enthalten.",
+      descDev: "Neueste Entwicklungsversion. Enthält Funktionen in Entwicklung. Nur für Entwickler empfohlen.",
+      sourceInstall: "Installation aus Quellcode",
+    },
+  };
+
+  function dlLang() {
+    return localStorage.getItem("openakita_language") || "zh";
+  }
+
+  function dt(key) {
+    var lang = dlLang();
+    var msgs = DL_MSGS[lang] || DL_MSGS.en || {};
+    return msgs[key] || (DL_MSGS.en || {})[key] || (DL_MSGS.zh || {})[key] || key;
+  }
+
+  function channelLabel(ch) {
+    var map = { release: "channelRelease", "pre-release": "channelPreRelease", dev: "channelDev", pre_release: "channelPreRelease" };
+    return dt(map[ch] || ch);
+  }
+
   // ── State ──
   var state = {
     platform: null,
@@ -139,8 +354,8 @@
   }
 
   function shortArchLabel(nickname) {
-    if (/arm64|aarch64|apple.silicon/i.test(nickname)) return "Apple（M系列）芯片版";
-    if (/x64|x86_64|intel/i.test(nickname)) return "Intel 芯片版";
+    if (/arm64|aarch64|apple.silicon/i.test(nickname)) return dt("archApple");
+    if (/x64|x86_64|intel/i.test(nickname)) return dt("archIntel");
     return nickname;
   }
 
@@ -205,7 +420,7 @@
     if (!manifest || !manifest.version) {
       if (versionEl) versionEl.textContent = "--";
       if (dateEl) dateEl.textContent = "";
-      if (actionsEl) actionsEl.innerHTML = '<span class="channel-unavailable">暂无此渠道版本</span>';
+      if (actionsEl) actionsEl.innerHTML = '<span class="channel-unavailable">' + escapeHtml(dt("channelUnavailable")) + '</span>';
       if (allArchEl) allArchEl.style.display = "none";
       if (card) card.classList.add("channel-card-empty");
       return;
@@ -221,7 +436,7 @@
 
     if (actionsEl) {
       if (platform === "ios" && (!dl || !dl.url)) {
-        actionsEl.innerHTML = '<span class="channel-ios-hint">即将推出 — 敬请期待</span>';
+        actionsEl.innerHTML = '<span class="channel-ios-hint">' + escapeHtml(dt("iosHint")) + '</span>';
       } else if (platform === "macos" && platformItems && platformItems.length > 1) {
         var html = '<div class="macos-arch-buttons">';
         platformItems.forEach(function (item) {
@@ -229,7 +444,7 @@
           var label = shortArchLabel(item.nickname);
           html +=
             '<a class="btn btn-primary channel-dl-btn" href="' + escapeHtml(item.url) + '">' +
-            '下载 ' + escapeHtml(label) +
+            escapeHtml(dt("download")) + ' ' + escapeHtml(label) +
             (sizeStr ? ' <span class="dl-size">' + sizeStr + '</span>' : '') +
             '</a>';
         });
@@ -239,13 +454,13 @@
         var sizeStr = formatSize(dl.size);
         actionsEl.innerHTML =
           '<a class="btn btn-primary channel-dl-btn" href="' + escapeHtml(dl.url) + '">' +
-          '下载 ' + escapeHtml(dl.nickname) +
+          escapeHtml(dt("download")) + ' ' + escapeHtml(dl.nickname) +
           (sizeStr ? ' <span class="dl-size">' + sizeStr + '</span>' : '') +
           '</a>';
       } else {
         actionsEl.innerHTML =
           '<a class="btn btn-secondary channel-dl-btn" href="#versionHistory" onclick="document.getElementById(\'versionHistory\').open=true;document.getElementById(\'versionHistory\').scrollIntoView({behavior:\'smooth\'});return false;">' +
-          '暂无 ' + escapeHtml(platformLabel(platform)) + ' 安装包 · 查看历史版本</a>';
+          escapeHtml(dt("noPlatformPkg").replace("{p}", platformLabel(platform))) + '</a>';
       }
     }
 
@@ -294,10 +509,10 @@
     var title = document.getElementById("archDetailTitle");
     if (!overlay || !body) return;
 
-    var channelLabel = { release: "稳定版", "pre-release": "抢先版", dev: "开发版" }[channel] || channel;
+    var chLabel = channelLabel(channel);
 
     function renderForPlatform(p) {
-      title.textContent = channelLabel + " v" + manifest.version + " — " + platformLabel(p);
+      title.textContent = chLabel + " v" + manifest.version + " — " + platformLabel(p);
 
       var html = "";
 
@@ -319,7 +534,7 @@
       var items = (manifest.downloads || {})[p] || [];
       html += '<div class="arch-list">';
       if (items.length === 0) {
-        html += '<p class="arch-empty">该版本暂无 ' + escapeHtml(platformLabel(p)) + ' 安装包</p>';
+        html += '<p class="arch-empty">' + escapeHtml(dt("noArchPkg").replace("{p}", platformLabel(p))) + '</p>';
       } else {
         items.forEach(function (item) {
           var sizeStr = formatSize(item.size);
@@ -381,9 +596,7 @@
     var contentEl = document.getElementById("releaseNotesContent");
     if (!section || !contentEl) return;
 
-    var channelLabel = { release: "稳定版", "pre-release": "抢先版", dev: "开发版" };
     var manifest = state.manifests[state.activeNotesChannel];
-    // Fallback: if active channel has no notes, try others
     if (!manifest || !manifest.notes) {
       var fallback = CHANNELS.find(function (ch) {
         var m = state.manifests[ch];
@@ -398,9 +611,9 @@
       return;
     }
 
-    var label = channelLabel[state.activeNotesChannel] || state.activeNotesChannel;
+    var label = channelLabel(state.activeNotesChannel);
     section.style.display = "";
-    if (titleEl) titleEl.textContent = label + " v" + manifest.version + " 更新日志";
+    if (titleEl) titleEl.textContent = label + " v" + manifest.version + " " + dt("changelog");
     contentEl.innerHTML = renderMarkdown(manifest.notes);
   }
 
@@ -418,12 +631,12 @@
   function loadHistory() {
     var container = document.getElementById("versionHistoryContent");
     if (!container) return;
-    container.innerHTML = '<p class="channel-loading">加载中...</p>';
+    container.innerHTML = '<p class="channel-loading">' + escapeHtml(dt("loading")) + '</p>';
 
     fetchVersionsIndex().then(function (index) {
       state.historyLoaded = true;
       if (!index) {
-        container.innerHTML = '<p>暂无历史版本数据，请稍后再试。</p>';
+        container.innerHTML = '<p>' + escapeHtml(dt("noHistory")) + '</p>';
         return;
       }
       renderHistory(index, container);
@@ -432,7 +645,6 @@
 
   function renderHistory(index, container) {
     var channelKeys = ["release", "pre_release", "dev"];
-    var channelLabels = { release: "稳定版", pre_release: "抢先版", dev: "开发版" };
 
     // Merge all entries from all channels, keeping the latest patch per minor version
     var minorGroups = {};
@@ -451,7 +663,6 @@
             pub_date: entry.pub_date,
             platforms: entry.platforms,
             channel: key,
-            channelLabel: channelLabels[key] || key,
             patch: patch,
           };
         }
@@ -474,16 +685,16 @@
         html += '<div class="history-item" data-version="' + escapeHtml(entry.version) + '">';
         html += '<span class="history-version">v' + escapeHtml(entry.version) + '</span>';
         var tagClass = { release: "badge-release", pre_release: "badge-prerelease", dev: "badge-dev" }[entry.channel] || "";
-        html += '<span class="history-channel-tag ' + tagClass + '">' + escapeHtml(entry.channelLabel) + '</span>';
+        html += '<span class="history-channel-tag ' + tagClass + '">' + escapeHtml(channelLabel(entry.channel)) + '</span>';
         html += '<span class="history-date">' + formatDate(entry.pub_date) + '</span>';
         html += '<span class="history-platforms">' + escapeHtml(platforms) + '</span>';
-        html += '<button class="history-dl-btn" data-version="' + escapeHtml(entry.version) + '">下载</button>';
-        html += '<button class="history-notes-btn" data-version="' + escapeHtml(entry.version) + '">更新日志</button>';
+        html += '<button class="history-dl-btn" data-version="' + escapeHtml(entry.version) + '">' + escapeHtml(dt("download")) + '</button>';
+        html += '<button class="history-notes-btn" data-version="' + escapeHtml(entry.version) + '">' + escapeHtml(dt("changelog")) + '</button>';
         html += '</div>';
       });
       html += '</div>';
     } else {
-      html = '<p>暂无历史版本数据。</p>';
+      html = '<p>' + escapeHtml(dt("noHistoryShort")) + '</p>';
     }
 
     container.innerHTML = html;
@@ -504,7 +715,7 @@
   function showHistoryDownload(version) {
     fetchVersionManifest(version).then(function (manifest) {
       if (!manifest) {
-        alert("v" + version + " 暂无下载数据");
+        alert("v" + version + " — " + dt("noDownloadData"));
         return;
       }
       var downloads = manifest.downloads || {};
@@ -512,7 +723,7 @@
         return downloads[k] && downloads[k].length > 0;
       });
       if (!hasAny) {
-        alert("v" + version + " 暂无任何平台安装包");
+        alert("v" + version + " — " + dt("noPlatformAny"));
         return;
       }
       var platform = state.platform;
@@ -528,14 +739,14 @@
   function showHistoryNotes(version) {
     fetchVersionManifest(version).then(function (manifest) {
       if (!manifest || !manifest.notes) {
-        alert("v" + version + " 暂无更新日志");
+        alert("v" + version + " — " + dt("noChangelog"));
         return;
       }
       var overlay = document.getElementById("notesModalOverlay");
       var titleEl = document.getElementById("notesModalTitle");
       var bodyEl = document.getElementById("notesModalBody");
       if (!overlay || !bodyEl) return;
-      if (titleEl) titleEl.textContent = "v" + version + " 更新日志";
+      if (titleEl) titleEl.textContent = "v" + version + " " + dt("changelog");
       bodyEl.innerHTML = renderMarkdown(manifest.notes);
       overlay.style.display = "";
     });
@@ -627,9 +838,63 @@
     });
   }
 
+  function setDlText(el, text) {
+    if (!el) return;
+    el.textContent = text;
+    el.dataset.i18nManaged = "";
+  }
+
+  function translateStaticHTML() {
+    var q = function (sel) { return document.querySelector(sel); };
+    var qa = function (sel) { return document.querySelectorAll(sel); };
+
+    setDlText(q('.channel-card[data-channel="release"] .badge-release'), dt("channelRelease"));
+    setDlText(q('.channel-card[data-channel="release"] .channel-recommend'), dt("recommend"));
+    setDlText(q('.channel-card[data-channel="pre-release"] .badge-prerelease'), dt("channelPreRelease"));
+    setDlText(q('.channel-card[data-channel="dev"] .badge-dev'), dt("channelDev"));
+
+    var descMap = { release: "descRelease", "pre-release": "descPreRelease", dev: "descDev" };
+    qa(".channel-card").forEach(function (card) {
+      var ch = card.getAttribute("data-channel");
+      var desc = card.querySelector(".channel-card-desc");
+      if (desc && descMap[ch]) setDlText(desc, dt(descMap[ch]));
+    });
+
+    qa(".channel-card-all-arch").forEach(function (a) { setDlText(a, dt("viewAllArch")); });
+
+    var archTitle = q("#archDetailTitle");
+    if (archTitle && !archTitle.textContent.match(/^v?\d/)) setDlText(archTitle, dt("downloadOptions"));
+
+    setDlText(q("#versionHistory > summary"), dt("historyVersions"));
+
+    var historyHint = q("#versionHistoryContent > .channel-loading");
+    if (historyHint && !state.historyLoaded) setDlText(historyHint, dt("historyHint"));
+
+    qa(".channel-card-actions .channel-loading").forEach(function (el) {
+      setDlText(el, dt("loading"));
+    });
+
+    setDlText(q('.install-tab[data-tab="source"] span'), dt("sourceInstall"));
+  }
+
+  function onLanguageChanged() {
+    translateStaticHTML();
+    renderAllChannels();
+    if (state.historyLoaded && state.versionsIndex) {
+      var container = document.getElementById("versionHistoryContent");
+      if (container) renderHistory(state.versionsIndex, container);
+    }
+  }
+
+  document.addEventListener("openakita:language-changed", onLanguageChanged);
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", function () {
+      init();
+      translateStaticHTML();
+    });
   } else {
     init();
+    translateStaticHTML();
   }
 })();
