@@ -9,11 +9,8 @@
     fr: "fr-FR",
     de: "de-DE",
   };
-  const AUTO_TRANSLATE_SUPPORTED = new Set(["en", "ja", "ko", "ru", "fr", "de"]);
-  const AUTO_TRANSLATE_CACHE_KEY = "openakita_auto_i18n_cache_v1";
-  const AUTO_TRANSLATE_SEPARATOR = "[[[OPENAKITA_SEP]]]";
-  const PREBUILT_TRANSLATION_CACHE_URL = "/assets/i18n/prebuilt_cache.json?v=20260225-i18n-all-lang";
-  const AUTO_TRANSLATE_SKIP_IDS = new Set([
+  const CONTENT_TRANSLATE_LANGS = new Set(["en", "ja", "ko", "ru", "fr", "de"]);
+  const CONTENT_SKIP_IDS = new Set([
     "latestReleaseVersion",
     "latestReleaseDate",
     "windowsAssetName",
@@ -713,6 +710,97 @@
     return Array.isArray(value) ? value : [];
   }
 
+  var languagePacks = {};
+  var loadingPacks = {};
+  var originalTextMap = new WeakMap();
+
+  function loadLanguagePack(lang) {
+    if (lang === "zh") return Promise.resolve(null);
+    if (languagePacks[lang]) return Promise.resolve(languagePacks[lang]);
+    if (loadingPacks[lang]) return loadingPacks[lang];
+
+    var promise = fetch("/assets/i18n/" + lang + ".json?v=20260316-i18n-full")
+      .then(function (response) {
+        if (!response.ok) throw new Error("i18n_load_failed");
+        return response.json();
+      })
+      .then(function (data) {
+        languagePacks[lang] = data;
+        delete loadingPacks[lang];
+        return data;
+      })
+      .catch(function () {
+        delete loadingPacks[lang];
+        return null;
+      });
+
+    loadingPacks[lang] = promise;
+    return promise;
+  }
+
+  function applyContentTranslations() {
+    var pack = currentLanguage !== "zh" ? languagePacks[currentLanguage] : null;
+
+    var roots = [];
+    var mainEl = document.querySelector("main");
+    var footerEl = document.querySelector(".site-footer");
+    var drawerEl = document.querySelector("[data-setup-drawer]");
+    if (mainEl) roots.push(mainEl);
+    if (footerEl) roots.push(footerEl);
+    if (drawerEl) roots.push(drawerEl);
+
+    var meaningfulPattern = /[\p{L}\p{N}]/u;
+
+    roots.forEach(function (root) {
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      var node = walker.nextNode();
+
+      while (node) {
+        var parent = node.parentElement;
+        if (!parent) { node = walker.nextNode(); continue; }
+
+        if (parent.closest("script,style,noscript,textarea,code,pre,.code-block,[data-i18n-managed]")) {
+          node = walker.nextNode();
+          continue;
+        }
+
+        var idCarrier = parent.closest("[id]");
+        if (idCarrier && CONTENT_SKIP_IDS.has(idCarrier.id)) {
+          node = walker.nextNode();
+          continue;
+        }
+
+        var raw = node.nodeValue || "";
+        var match = raw.match(/^(\s*)([\s\S]*?)(\s*)$/);
+        if (!match) { node = walker.nextNode(); continue; }
+
+        var prefix = match[1];
+        var core = match[2];
+        var suffix = match[3];
+
+        if (!core || !meaningfulPattern.test(core) || core.trim().startsWith("\u00a9")) {
+          node = walker.nextNode();
+          continue;
+        }
+
+        var source = originalTextMap.get(node);
+        if (!source) {
+          source = core;
+          originalTextMap.set(node, source);
+        }
+
+        var translated = pack ? pack[source] : null;
+        if (translated && translated.trim()) {
+          node.nodeValue = prefix + translated + suffix;
+        } else {
+          node.nodeValue = prefix + source + suffix;
+        }
+
+        node = walker.nextNode();
+      }
+    });
+  }
+
   let homeHeroTypingRun = 0;
 
   function applyHomeRevealStagger() {
@@ -963,17 +1051,28 @@
 
     select.value = currentLanguage;
     select.addEventListener("change", function () {
-      currentLanguage = normalizeLanguageTag(select.value);
+      var targetLang = normalizeLanguageTag(select.value);
+      currentLanguage = targetLang;
       localStorage.setItem("openakita_language", currentLanguage);
       document.documentElement.lang = LANG_TO_LOCALE[currentLanguage] || "en-US";
+
       applyMeta(pageKey);
       applyCommonTexts();
       applyPageTexts(pageKey);
       applyHomeRevealStagger();
       enhanceCodeBlocks();
-      reverseSourceLookupByLang = {};
-      void autoTranslateSiteContent();
-      document.dispatchEvent(new CustomEvent("openakita:language-changed"));
+
+      if (currentLanguage === "zh" || languagePacks[currentLanguage]) {
+        applyContentTranslations();
+        document.dispatchEvent(new CustomEvent("openakita:language-changed"));
+      } else {
+        loadLanguagePack(currentLanguage).then(function () {
+          if (currentLanguage !== targetLang) return;
+          applyContentTranslations();
+          enhanceCodeBlocks();
+          document.dispatchEvent(new CustomEvent("openakita:language-changed"));
+        });
+      }
     });
 
     wrapper.appendChild(label);
@@ -1045,325 +1144,6 @@
       }
       btn.textContent = getCopyButtonLabel(btn.dataset.state || "idle");
     });
-  }
-
-  const contentTextSourceMap = new WeakMap();
-  let autoTranslateCache = null;
-  let reverseSourceLookupByLang = {};
-  let autoTranslateRunId = 0;
-  let prebuiltCacheMerged = false;
-  let prebuiltCachePromise = null;
-
-  function loadAutoTranslateCache() {
-    if (autoTranslateCache) return autoTranslateCache;
-    try {
-      autoTranslateCache = JSON.parse(localStorage.getItem(AUTO_TRANSLATE_CACHE_KEY) || "{}");
-    } catch (error) {
-      autoTranslateCache = {};
-    }
-    return autoTranslateCache;
-  }
-
-  function saveAutoTranslateCache() {
-    if (!autoTranslateCache) return;
-    reverseSourceLookupByLang = {};
-    try {
-      localStorage.setItem(AUTO_TRANSLATE_CACHE_KEY, JSON.stringify(autoTranslateCache));
-    } catch (error) {
-      // Ignore quota errors and keep in-memory cache.
-    }
-  }
-
-  function getReverseSourceLookup(lang) {
-    if (reverseSourceLookupByLang[lang]) return reverseSourceLookupByLang[lang];
-    const cache = loadAutoTranslateCache();
-    const langCache = cache[lang] || {};
-    const reverse = new Map();
-    Object.keys(langCache).forEach(function (source) {
-      const translated = langCache[source];
-      if (typeof translated === "string" && translated && !reverse.has(translated)) {
-        reverse.set(translated, source);
-      }
-    });
-    reverseSourceLookupByLang[lang] = reverse;
-    return reverse;
-  }
-
-  function looksLikeChineseSource(text) {
-    if (typeof text !== "string") return false;
-    if (!/[\u4e00-\u9fff]/.test(text)) return false;
-    if (/[\u3040-\u309f\u30a0-\u30ff]/.test(text)) return false;
-    if (/[\uac00-\ud7af]/.test(text)) return false;
-    return true;
-  }
-
-  function inferSourceCore(core) {
-    if (typeof core !== "string" || !core) return core;
-    if (looksLikeChineseSource(core)) return core;
-
-    const candidates = [currentLanguage, "en"].concat(Array.from(AUTO_TRANSLATE_SUPPORTED));
-    const seen = new Set();
-
-    for (const lang of candidates) {
-      if (!lang || seen.has(lang)) continue;
-      seen.add(lang);
-      const reverse = getReverseSourceLookup(lang);
-      if (reverse.has(core)) return reverse.get(core);
-    }
-
-    return core;
-  }
-
-  async function ensurePrebuiltTranslateCacheLoaded() {
-    if (prebuiltCacheMerged) return;
-    if (!prebuiltCachePromise) {
-      prebuiltCachePromise = (async function () {
-        try {
-          const response = await fetch(PREBUILT_TRANSLATION_CACHE_URL, { cache: "force-cache" });
-          if (!response.ok) return;
-          const payload = await response.json();
-          const prebuilt = payload && payload.cache && typeof payload.cache === "object" ? payload.cache : null;
-          if (!prebuilt) return;
-
-          const cache = loadAutoTranslateCache();
-          AUTO_TRANSLATE_SUPPORTED.forEach(function (lang) {
-            const fromFile = prebuilt[lang];
-            if (!fromFile || typeof fromFile !== "object") return;
-            cache[lang] = cache[lang] || {};
-            Object.keys(fromFile).forEach(function (source) {
-              cache[lang][source] = fromFile[source];
-            });
-          });
-          saveAutoTranslateCache();
-        } catch (error) {
-          // Keep runtime translation fallback when prebuilt cache is unavailable.
-        } finally {
-          prebuiltCacheMerged = true;
-        }
-      })();
-    }
-    await prebuiltCachePromise;
-  }
-
-  function collectContentTextNodes() {
-    const roots = [];
-    const main = document.querySelector("main");
-    const footer = document.querySelector(".site-footer");
-    const setupDrawer = document.querySelector("[data-setup-drawer]");
-    if (main) roots.push(main);
-    if (footer) roots.push(footer);
-    if (setupDrawer) roots.push(setupDrawer);
-
-    const entries = [];
-    const meaningfulPattern = /[\p{L}\p{N}]/u;
-
-    roots.forEach(function (root) {
-      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-      let node = walker.nextNode();
-
-      while (node) {
-        const parent = node.parentElement;
-        if (!parent) {
-          node = walker.nextNode();
-          continue;
-        }
-
-        if (parent.closest("script,style,noscript,textarea,code,pre,.code-block,[data-i18n-managed]")) {
-          node = walker.nextNode();
-          continue;
-        }
-
-        const idCarrier = parent.closest("[id]");
-        if (idCarrier && AUTO_TRANSLATE_SKIP_IDS.has(idCarrier.id)) {
-          node = walker.nextNode();
-          continue;
-        }
-
-        const raw = node.nodeValue || "";
-        const match = raw.match(/^(\s*)([\s\S]*?)(\s*)$/);
-        if (!match) {
-          node = walker.nextNode();
-          continue;
-        }
-
-        const prefix = match[1];
-        const core = match[2];
-        const suffix = match[3];
-
-        if (!core || !meaningfulPattern.test(core) || core.trim().startsWith("©")) {
-          node = walker.nextNode();
-          continue;
-        }
-
-        let sourceCore = contentTextSourceMap.get(node);
-        if (!sourceCore) {
-          sourceCore = inferSourceCore(core);
-          contentTextSourceMap.set(node, sourceCore);
-        } else if (!looksLikeChineseSource(sourceCore)) {
-          const recoveredFromCore = inferSourceCore(core);
-          if (recoveredFromCore && recoveredFromCore !== sourceCore) {
-            sourceCore = recoveredFromCore;
-            contentTextSourceMap.set(node, sourceCore);
-          } else {
-            const recoveredFromStored = inferSourceCore(sourceCore);
-            if (recoveredFromStored && recoveredFromStored !== sourceCore) {
-              sourceCore = recoveredFromStored;
-              contentTextSourceMap.set(node, sourceCore);
-            }
-          }
-        }
-
-        if (currentLanguage === "zh") {
-          if (looksLikeChineseSource(core)) {
-            sourceCore = core;
-            contentTextSourceMap.set(node, sourceCore);
-          } else if (!looksLikeChineseSource(sourceCore || "")) {
-            const recoveredSource = inferSourceCore(core);
-            if (recoveredSource && recoveredSource !== sourceCore) {
-              sourceCore = recoveredSource;
-              contentTextSourceMap.set(node, sourceCore);
-            }
-          }
-        }
-
-        entries.push({
-          node: node,
-          prefix: prefix,
-          suffix: suffix,
-          source: sourceCore || core,
-        });
-
-        node = walker.nextNode();
-      }
-    });
-
-    return entries;
-  }
-
-  async function requestGoogleTranslateBatch(texts, targetLanguage) {
-    const query = encodeURIComponent(texts.join(AUTO_TRANSLATE_SEPARATOR));
-    const url =
-      "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" +
-      encodeURIComponent(targetLanguage) +
-      "&dt=t&q=" +
-      query;
-    const response = await fetch(url, { cache: "no-store" });
-    if (!response.ok) {
-      throw new Error("translate_request_failed");
-    }
-    const payload = await response.json();
-    const segments = Array.isArray(payload) && Array.isArray(payload[0]) ? payload[0] : [];
-    const translated = segments
-      .map(function (segment) {
-        return Array.isArray(segment) && typeof segment[0] === "string" ? segment[0] : "";
-      })
-      .join("");
-    const parts = translated.split(AUTO_TRANSLATE_SEPARATOR);
-    if (parts.length !== texts.length) {
-      throw new Error("translate_batch_split_failed");
-    }
-    return parts;
-  }
-
-  async function translateMissingTexts(sources, targetLanguage) {
-    const translatedMap = {};
-    const queue = sources.slice();
-
-    while (queue.length > 0) {
-      const batch = [];
-      let charCount = 0;
-
-      while (queue.length > 0) {
-        const candidate = queue[0];
-        const projected = charCount + candidate.length + AUTO_TRANSLATE_SEPARATOR.length;
-        if (batch.length >= 24 || (batch.length > 0 && projected > 3200)) {
-          break;
-        }
-        batch.push(queue.shift());
-        charCount = projected;
-      }
-
-      if (batch.length === 0) {
-        batch.push(queue.shift());
-      }
-
-      try {
-        const translatedBatch = await requestGoogleTranslateBatch(batch, targetLanguage);
-        batch.forEach(function (source, index) {
-          translatedMap[source] = translatedBatch[index] || source;
-        });
-      } catch (error) {
-        for (const source of batch) {
-          try {
-            const single = await requestGoogleTranslateBatch([source], targetLanguage);
-            translatedMap[source] = single[0] || source;
-          } catch (singleError) {
-            translatedMap[source] = source;
-          }
-        }
-      }
-    }
-
-    return translatedMap;
-  }
-
-  async function autoTranslateSiteContent() {
-    const runId = ++autoTranslateRunId;
-
-    if (currentLanguage !== "zh" && AUTO_TRANSLATE_SUPPORTED.has(currentLanguage)) {
-      await ensurePrebuiltTranslateCacheLoaded();
-      if (runId !== autoTranslateRunId) return;
-    }
-
-    const entries = collectContentTextNodes();
-    entries.forEach(function (entry) {
-      if (!entry || !entry.node || entry.node.nodeType !== Node.TEXT_NODE) return;
-      entry.node.nodeValue = entry.prefix + entry.source + entry.suffix;
-    });
-
-    if (currentLanguage === "zh" || !AUTO_TRANSLATE_SUPPORTED.has(currentLanguage)) {
-      return;
-    }
-
-    const cache = loadAutoTranslateCache();
-    cache[currentLanguage] = cache[currentLanguage] || {};
-    const langCache = cache[currentLanguage];
-
-    const uniqueSources = Array.from(
-      new Set(
-        entries
-          .map(function (entry) {
-            return entry && typeof entry.source === "string" ? entry.source : "";
-          })
-          .filter(function (text) {
-            return text.trim().length > 0 && /[\p{L}\p{N}]/u.test(text);
-          })
-      )
-    );
-
-    const missingSources = uniqueSources.filter(function (source) {
-      return !langCache[source];
-    });
-
-    if (missingSources.length > 0) {
-      const translated = await translateMissingTexts(missingSources, currentLanguage);
-      if (runId !== autoTranslateRunId) return;
-      Object.keys(translated).forEach(function (source) {
-        langCache[source] = translated[source];
-      });
-      saveAutoTranslateCache();
-    }
-
-    if (runId !== autoTranslateRunId) return;
-
-    entries.forEach(function (entry) {
-      if (!entry || !entry.node || entry.node.nodeType !== Node.TEXT_NODE) return;
-      const englishCache = cache.en || {};
-      const translatedCore = langCache[entry.source] || englishCache[entry.source] || entry.source;
-      entry.node.nodeValue = entry.prefix + translatedCore + entry.suffix;
-    });
-
-    enhanceCodeBlocks();
   }
 
   const navToggle = document.querySelector(".nav-toggle");
@@ -1462,6 +1242,21 @@
 
   recoverBrokenSvgIcons();
 
+  if (currentLanguage !== "zh" && CONTENT_TRANSLATE_LANGS.has(currentLanguage)) {
+    loadLanguagePack(currentLanguage).then(function () {
+      applyContentTranslations();
+      enhanceCodeBlocks();
+    });
+  }
+
+  setTimeout(function () {
+    SUPPORTED_LANGS.forEach(function (lang) {
+      if (lang !== "zh" && lang !== currentLanguage && !languagePacks[lang] && !loadingPacks[lang]) {
+        loadLanguagePack(lang);
+      }
+    });
+  }, 2500);
+
   function initSetupInstallDrawer() {
     const triggers = Array.from(document.querySelectorAll("[data-setup-method]"));
     const drawer = document.querySelector("[data-setup-drawer]");
@@ -1559,7 +1354,7 @@
       });
 
       enhanceCodeBlocks();
-      void autoTranslateSiteContent();
+      applyContentTranslations();
       drawer.classList.add("is-open");
       backdrop.classList.add("is-open");
       drawer.setAttribute("aria-hidden", "false");
@@ -1587,5 +1382,4 @@
     });
   }
 
-  void autoTranslateSiteContent();
 })();
