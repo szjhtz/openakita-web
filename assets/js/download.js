@@ -888,6 +888,55 @@
 
   document.addEventListener("openakita:language-changed", onLanguageChanged);
 
+  // ── Download Click Tracking ──
+  function parseDownloadInfo(href, el) {
+    var filename = (href || "").split("/").pop().split("?")[0];
+    var card = el.closest ? el.closest(".channel-card") : null;
+    var historyItem = el.closest ? el.closest(".history-item") : null;
+    var archPanel = el.closest ? el.closest(".arch-detail-panel") : null;
+    var channel = "";
+    var version = "";
+
+    if (card) {
+      channel = card.getAttribute("data-channel") || "";
+      var vEl = card.querySelector(".channel-card-version");
+      version = vEl ? (vEl.textContent || "").replace(/^v/, "") : "";
+    } else if (historyItem) {
+      version = historyItem.getAttribute("data-version") || "";
+    } else if (archPanel) {
+      var title = archPanel.querySelector("#archDetailTitle");
+      var m = title ? (title.textContent || "").match(/v([\d.]+)/) : null;
+      if (m) version = m[1];
+    }
+
+    var platform = state.platform || "";
+    if (/\.exe$/i.test(filename)) platform = "windows";
+    else if (/\.dmg$/i.test(filename)) platform = "macos";
+    else if (/\.deb$/i.test(filename)) platform = "linux";
+    else if (/\.appimage$/i.test(filename)) platform = "linux";
+    else if (/\.apk$/i.test(filename)) platform = "android";
+    else if (/\.ipa$/i.test(filename)) platform = "ios";
+
+    return {
+      version: version,
+      channel: channel || "unknown",
+      platform: platform,
+      filename: filename,
+    };
+  }
+
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest ? e.target.closest("a.channel-dl-btn, a.arch-item") : null;
+    if (!a) return;
+    var href = a.getAttribute("href") || "";
+    if (!href.startsWith("http")) return;
+
+    var info = parseDownloadInfo(href, a);
+    if (typeof window.__oa_track === "function") {
+      window.__oa_track("dl", info);
+    }
+  });
+
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
       init();
