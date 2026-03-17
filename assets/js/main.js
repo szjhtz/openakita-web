@@ -1382,4 +1382,55 @@
     });
   }
 
+  // ── GitHub Stars ──
+  (function () {
+    var REPO = "openakita/openakita";
+    var CACHE_KEY = "oa_gh_stars";
+    var CACHE_TTL = 3600000; // 1 hour
+
+    function formatCount(n) {
+      if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, "") + "k";
+      return String(n);
+    }
+
+    function applyStars(count) {
+      var formatted = formatCount(count);
+      document.querySelectorAll("[data-gh-stars]").forEach(function (el) {
+        el.textContent = "\u2605 " + formatted;
+      });
+      var heroLink = document.querySelector(".gh-hero-link");
+      if (heroLink) heroLink.classList.add("is-visible");
+    }
+
+    function injectNavBadge(count) {
+      var navGH = document.querySelector('.main-nav a[href*="github.com"]');
+      if (!navGH || navGH.querySelector(".nav-star-badge")) return;
+      var badge = document.createElement("span");
+      badge.className = "nav-star-badge";
+      badge.textContent = formatCount(count);
+      navGH.classList.add("has-stars");
+      navGH.appendChild(badge);
+    }
+
+    try {
+      var cached = JSON.parse(localStorage.getItem(CACHE_KEY) || "{}");
+      if (cached.count && cached.ts && Date.now() - cached.ts < CACHE_TTL) {
+        applyStars(cached.count);
+        injectNavBadge(cached.count);
+        return;
+      }
+    } catch (_) {}
+
+    fetch("https://api.github.com/repos/" + REPO)
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var count = data.stargazers_count;
+        if (typeof count !== "number") return;
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ count: count, ts: Date.now() }));
+        applyStars(count);
+        injectNavBadge(count);
+      })
+      .catch(function () {});
+  })();
+
 })();
