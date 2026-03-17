@@ -1585,23 +1585,33 @@ section[id] {
   padding: 16px;
 }
 
+.video-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.video-item h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
 .video-embed {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
   border-radius: var(--radius-sm);
   border: 1px solid rgba(117, 175, 221, 0.44);
-  background: linear-gradient(150deg, #f4fbff, #e6f2ff);
-  color: var(--text-dim);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 20px;
+  background: #000;
   overflow: hidden;
 }
 
 .video-embed iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   border: 0;
