@@ -2214,8 +2214,7 @@ body[data-page="home"] .home-section .reveal.is-visible {
   border-color: rgba(15, 111, 204, 0.3);
 }
 .channel-card-empty {
-  opacity: 0.5;
-  pointer-events: none;
+  display: none;
 }
 .channel-card-header {
   display: flex;
