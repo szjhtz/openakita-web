@@ -801,6 +801,45 @@
     });
   }
 
+  // ── Image i18n ──
+  var originalImgSrcMap = new WeakMap();
+
+  function applyImageTranslations() {
+    var imgs = document.querySelectorAll("[data-i18n-img]");
+    imgs.forEach(function (img) {
+      if (!originalImgSrcMap.has(img)) {
+        originalImgSrcMap.set(img, img.getAttribute("src"));
+      }
+      var zhSrc = originalImgSrcMap.get(img);
+
+      if (currentLanguage === "zh") {
+        img.setAttribute("src", zhSrc);
+        return;
+      }
+
+      var langSrc = zhSrc.replace("/zh/", "/" + currentLanguage + "/");
+      var enSrc = zhSrc.replace("/zh/", "/en/");
+
+      var candidates = [langSrc];
+      if (currentLanguage !== "en") {
+        candidates.push(enSrc);
+      }
+
+      function tryNext(i) {
+        if (i >= candidates.length) {
+          img.setAttribute("src", zhSrc);
+          return;
+        }
+        var probe = new Image();
+        probe.onload = function () { img.setAttribute("src", candidates[i]); };
+        probe.onerror = function () { tryNext(i + 1); };
+        probe.src = candidates[i];
+      }
+
+      tryNext(0);
+    });
+  }
+
   let homeHeroTypingRun = 0;
 
   function applyHomeRevealStagger() {
@@ -1062,6 +1101,8 @@
       applyHomeRevealStagger();
       enhanceCodeBlocks();
 
+      applyImageTranslations();
+
       if (currentLanguage === "zh" || languagePacks[currentLanguage]) {
         applyContentTranslations();
         document.dispatchEvent(new CustomEvent("openakita:language-changed"));
@@ -1247,6 +1288,10 @@
       applyContentTranslations();
       enhanceCodeBlocks();
     });
+  }
+
+  if (currentLanguage !== "zh") {
+    applyImageTranslations();
   }
 
   setTimeout(function () {
