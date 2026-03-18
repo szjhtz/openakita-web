@@ -366,6 +366,18 @@
     return "<pre>" + escapeHtml(md || "") + "</pre>";
   }
 
+  function getLocalizedNotes(manifest) {
+    if (!manifest) return "";
+    var lang = dlLang();
+    if (lang === "zh" && manifest.notes_zh) return manifest.notes_zh;
+    if (lang !== "zh" && manifest.notes_en) return manifest.notes_en;
+    return manifest.notes || "";
+  }
+
+  function hasNotes(manifest) {
+    return manifest && (manifest.notes || manifest.notes_zh || manifest.notes_en);
+  }
+
   function escapeHtml(s) {
     var d = document.createElement("div");
     d.textContent = s;
@@ -495,7 +507,7 @@
       card.addEventListener("mouseenter", function () {
         var ch = card.getAttribute("data-channel");
         var m = state.manifests[ch];
-        if (m && m.notes) {
+        if (hasNotes(m)) {
           switchNotesChannel(ch);
         }
       });
@@ -597,16 +609,15 @@
     if (!section || !contentEl) return;
 
     var manifest = state.manifests[state.activeNotesChannel];
-    if (!manifest || !manifest.notes) {
+    if (!hasNotes(manifest)) {
       var fallback = CHANNELS.find(function (ch) {
-        var m = state.manifests[ch];
-        return m && m.notes;
+        return hasNotes(state.manifests[ch]);
       });
       manifest = fallback ? state.manifests[fallback] : null;
       if (fallback) state.activeNotesChannel = fallback;
     }
 
-    if (!manifest || !manifest.notes) {
+    if (!hasNotes(manifest)) {
       section.style.display = "none";
       return;
     }
@@ -614,7 +625,7 @@
     var label = channelLabel(state.activeNotesChannel);
     section.style.display = "";
     if (titleEl) titleEl.textContent = label + " v" + manifest.version + " " + dt("changelog");
-    contentEl.innerHTML = renderMarkdown(manifest.notes);
+    contentEl.innerHTML = renderMarkdown(getLocalizedNotes(manifest));
   }
 
   // ── History ──
@@ -738,7 +749,7 @@
 
   function showHistoryNotes(version) {
     fetchVersionManifest(version).then(function (manifest) {
-      if (!manifest || !manifest.notes) {
+      if (!hasNotes(manifest)) {
         alert("v" + version + " — " + dt("noChangelog"));
         return;
       }
@@ -747,7 +758,7 @@
       var bodyEl = document.getElementById("notesModalBody");
       if (!overlay || !bodyEl) return;
       if (titleEl) titleEl.textContent = "v" + version + " " + dt("changelog");
-      bodyEl.innerHTML = renderMarkdown(manifest.notes);
+      bodyEl.innerHTML = renderMarkdown(getLocalizedNotes(manifest));
       overlay.style.display = "";
     });
   }
@@ -815,8 +826,7 @@
       state.manifests = manifests;
       // Set initial active notes channel to first channel with notes
       var initialNotes = CHANNELS.find(function (ch) {
-        var m = manifests[ch];
-        return m && m.notes;
+        return hasNotes(manifests[ch]);
       });
       if (initialNotes) state.activeNotesChannel = initialNotes;
       renderAllChannels();
