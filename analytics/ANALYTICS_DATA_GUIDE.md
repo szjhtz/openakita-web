@@ -378,11 +378,17 @@ for h in sorted(hourly_dl.keys()):
   - 运行时：**Python 3.10**（内置运行时）
   - 请求处理程序（Handler）：`aggregate.handler`
   - 函数代码：上传 `analytics/aggregate.py`
-3. 环境变量：与追踪函数相同的 OSS 配置，额外增加：
+3. 环境变量（函数配置 → 环境变量）：
 
-  | 变量名          | 值    | 说明                |
-  | ------------ | ---- | ----------------- |
-  | `STATS_DAYS` | `90` | 聚合最近多少天的数据（默认 90） |
+  | 变量名            | 值                                      | 说明              |
+  | -------------- | -------------------------------------- | --------------- |
+  | `OSS_ENDPOINT` | `https://oss-cn-hangzhou.aliyuncs.com` | 你的 OSS 所在地域     |
+  | `OSS_BUCKET`   | `openakita-dist`                       | 你的 Bucket 名称    |
+  | `OSS_AK`       | 你的 AccessKey ID                        | 阿里云 AK          |
+  | `OSS_SK`       | 你的 AccessKey Secret                    | 阿里云 SK（注意保密）    |
+  | `STATS_DAYS`   | `90`                                   | 聚合最近多少天的数据（默认 90） |
+
+  > ⚠️ 前 4 项（OSS 配置）必须与追踪函数 (track.py) 保持一致，缺少任何一项都会导致 `TypeError: can only concatenate str (not "NoneType") to str` 错误。`IP_SALT` 仅 track.py 使用，此处无需配置。
 
 4. 创建 **定时触发器**：
   - 触发器类型：**定时触发器**
