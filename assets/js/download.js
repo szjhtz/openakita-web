@@ -366,12 +366,59 @@
     return "<pre>" + escapeHtml(md || "") + "</pre>";
   }
 
+  var CJK_RE = /[\u4e00-\u9fff\u3400-\u4dbf]/;
+
+  function splitNotes(notes) {
+    if (!notes || !notes.trim()) return null;
+    var lines = notes.split("\n");
+    var h2s = [];
+    var footerStart = lines.length;
+
+    for (var i = 0; i < lines.length; i++) {
+      var s = lines[i].trim();
+      if (s.indexOf("**Full Changelog**") === 0) { footerStart = i; break; }
+      if (s.indexOf("## ") === 0) {
+        h2s.push({ idx: i, zh: CJK_RE.test(s) });
+      }
+    }
+    if (!h2s.length) return null;
+
+    var hasZh = h2s.some(function (h) { return h.zh; });
+    var hasEn = h2s.some(function (h) { return !h.zh; });
+    if (!hasZh || !hasEn) return null;
+
+    var zhParts = [], enParts = [];
+    for (var j = 0; j < h2s.length; j++) {
+      var start = h2s[j].idx;
+      var end = (j + 1 < h2s.length) ? h2s[j + 1].idx : footerStart;
+      var chunk = lines.slice(start, end).join("\n");
+      (h2s[j].zh ? zhParts : enParts).push(chunk);
+    }
+
+    var footer = lines.slice(footerStart).join("\n").trim();
+    var zhText = zhParts.join("\n").trim();
+    var enText = enParts.join("\n").trim();
+    if (footer) {
+      if (zhText) zhText += "\n\n" + footer;
+      if (enText) enText += "\n\n" + footer;
+    }
+    return { zh: zhText, en: enText };
+  }
+
   function getLocalizedNotes(manifest) {
     if (!manifest) return "";
     var lang = dlLang();
-    if (lang === "zh" && manifest.notes_zh) return manifest.notes_zh;
-    if (lang !== "zh" && manifest.notes_en) return manifest.notes_en;
-    return manifest.notes || "";
+    var isZh = (lang === "zh");
+
+    if (isZh && manifest.notes_zh) return manifest.notes_zh;
+    if (!isZh && manifest.notes_en) return manifest.notes_en;
+
+    var notes = manifest.notes || "";
+    if (!notes) return "";
+
+    var split = splitNotes(notes);
+    if (split) return isZh ? (split.zh || notes) : (split.en || notes);
+    return notes;
   }
 
   function hasNotes(manifest) {
